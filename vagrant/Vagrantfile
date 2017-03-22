@@ -13,10 +13,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         jenkins.vm.hostname = "jenkins.vm"
         
         # VirtualBox configuration
-        jenkins.vm.provider :virtualbox do |vb|
-            vb.name = 'jenkins.vm'
+        jenkins.vm.provider "virtualbox" do |vb|
+            vb.name = "jenkins.vm"
             vb.gui = true
             vb.memory = 1024
         end
+
+        # Provisioning via bootstrap script
+        jenkins.vm.provision "shell", path: "bootstrap-jenkins.sh"
     end
 end
