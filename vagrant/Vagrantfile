@@ -11,6 +11,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
     config.vm.define "jenkins.vm" do |jenkins|
         jenkins.vm.hostname = "jenkins.vm"
+
+        # Shared folder for Jenkins VM config
+        jenkins.vm.synced_folder "jenkins-config/", "/jenkins-config"
         
         # VirtualBox configuration
         jenkins.vm.provider "virtualbox" do |vb|
