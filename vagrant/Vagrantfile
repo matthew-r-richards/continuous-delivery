@@ -1,0 +1,22 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+ 
+# Specify minimum Vagrant version and Vagrant API version
+Vagrant.require_version ">= 1.6.0"
+VAGRANTFILE_API_VERSION = "2"
+
+# Create boxes
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.box = "box-cutter/ubuntu1404-desktop"
+
+    config.vm.define "jenkins.vm" do |jenkins|
+        jenkins.vm.hostname = "jenkins.vm"
+        
+        # VirtualBox configuration
+        jenkins.vm.provider :virtualbox do |vb|
+            vb.name = 'jenkins.vm'
+            vb.gui = true
+            vb.memory = 1024
+        end
+    end
+end
