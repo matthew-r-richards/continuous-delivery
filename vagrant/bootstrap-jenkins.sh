@@ -40,7 +40,7 @@ echo $JENKINSVERSION >> /var/lib/jenkins/jenkins.install.UpgradeWizard.state
 restart_jenkins
 
 # Fetch the CLI client
-sudo wget http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
+sudo wget -q http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
 
 # Install jenkins plugins
 echo "--- Installing jenkins plugins ---"
