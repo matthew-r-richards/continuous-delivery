@@ -12,6 +12,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.define "jenkins.vm" do |jenkins|
         jenkins.vm.hostname = "jenkins.vm"
 
+        # Expose the VM externally
+        jenkins.vm.network "forwarded_port", guest: 8080, host: 1234
+
         # Shared folder for Jenkins VM config
         jenkins.vm.synced_folder ".", "/vagrant", disabled: true
         jenkins.vm.synced_folder "jenkins-config/", "/jenkins-config"
