@@ -3,7 +3,7 @@
 # Wait for the jenkins instance to be up and running
 wait_for_jenkins(){
     # Check the response for a success code
-    while [[ $(curl -s -w "%{http_code}"  http://localhost:8080 -o /dev/null) != "200" ]]; do
+    while [[ $(curl -s -w "%{http_code}"  http://127.0.0.1:8080 -o /dev/null) != "200" ]]; do
        sleep 1
     done
 }
@@ -38,3 +38,10 @@ echo $JENKINSVERSION >> /var/lib/jenkins/jenkins.install.UpgradeWizard.state
 
 # Restart jenkins
 restart_jenkins
+
+# Fetch the CLI client
+sudo wget http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
+
+# Install jenkins plugins
+echo "--- Installing jenkins plugins ---"
+java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ install-plugin git workflow-aggregator
