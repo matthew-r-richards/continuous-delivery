@@ -45,3 +45,6 @@ sudo wget -q http://127.0.0.1:8080/jnlpJars/jenkins-cli.jar
 # Install jenkins plugins
 echo "--- Installing jenkins plugins ---"
 java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ install-plugin git workflow-aggregator
+
+# Restart jenkins safely (i.e. after plugin installation)
+java -jar jenkins-cli.jar -s http://127.0.0.1:8080/ safe-restart
