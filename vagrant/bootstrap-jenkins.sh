@@ -2,6 +2,7 @@
 
 JENKINS_URL='http://127.0.0.1:8080/'
 JENKINS_PLUGINS_URL='https://updates.jenkins-ci.org/latest/'
+JENKINS_PLUGINS_DIR='/var/lib/jenkins/plugins'
 
 # Wait for the jenkins instance to be up and running
 wait_for_jenkins(){
@@ -15,6 +16,21 @@ wait_for_jenkins(){
 restart_jenkins(){
     sudo service jenkins restart
     wait_for_jenkins
+}
+
+# Adapted from https://gist.github.com/micw/e80d739c6099078ce0f3
+install_plugin(){
+  if [ -f ${JENKINS_PLUGINS_DIR}/${1}.hpi -o -f ${JENKINS_PLUGINS_DIR}/${1}.jpi ]; then
+    if [ "$2" == "1" ]; then
+      return 1
+    fi
+    echo "Skipped: $1 (already installed)"
+    return 0
+  else
+    echo "Installing: $1"
+    curl -L --silent --output ${JENKINS_PLUGINS_DIR}/${1}.hpi  ${JENKINS_PLUGINS_URL}${1}.hpi
+    return 0
+  fi
 }
 
 echo "--- Updating apt package lists ---"
@@ -47,8 +63,20 @@ sudo wget -q ${JENKINS_URL}jnlpJars/jenkins-cli.jar
 
 # Install jenkins plugins
 echo "--- Installing jenkins plugins ---"
-java -jar jenkins-cli.jar -s $JENKINS_URL install-plugin ${JENKINS_PLUGINS_URL}git.hpi ${JENKINS_PLUGINS_URL}workflow-aggregator.hpi
+install_plugin "git"
+install_plugin "workflow-aggregator"
 
-# Restart jenkins safely (i.e. after plugin installation)
-java -jar jenkins-cli.jar -s $JENKINS_URL safe-restart
-java -jar jenkins-cli.jar -s $JENKINS_URL reload-configuration
+changed=1
+
+while [ "$changed"  == "1" ]; do
+  echo "Check for missing dependecies ..."
+  changed=0
+  for f in /var/lib/jenkins/plugins/*.hpi ; do
+      deps=$( unzip -p ${f} META-INF/MANIFEST.MF | tr -d '\r' | sed -e ':a;N;$!ba;s/\n //g' | grep -e "^Plugin-Dependencies: " | awk '{ print $2 }' | tr ',' '\n' | awk -F ':' '{ print $1 }' | tr '\n' ' ' )
+      for plugin in $deps; do
+        install_plugin "$plugin" 1 && changed=1
+      done
+  done
+done
+
+restart_jenkins
