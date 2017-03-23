@@ -1,0 +1,32 @@
+# -*- mode: ruby -*-
+# # vi: set ft=ruby :
+ 
+# Specify minimum Vagrant version and Vagrant API version
+Vagrant.require_version ">= 1.6.0"
+VAGRANTFILE_API_VERSION = "2"
+
+# Create boxes
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+    config.vm.box = "box-cutter/ubuntu1404-desktop"
+
+    config.vm.define "jenkins.vm" do |jenkins|
+        jenkins.vm.hostname = "jenkins.vm"
+
+        # Expose the VM externally
+        jenkins.vm.network "forwarded_port", guest: 8080, host: 1234
+
+        # Shared folder for Jenkins VM config
+        jenkins.vm.synced_folder ".", "/vagrant", disabled: true
+        jenkins.vm.synced_folder "jenkins-config/", "/jenkins-config"
+        
+        # VirtualBox configuration
+        jenkins.vm.provider "virtualbox" do |vb|
+            vb.name = "jenkins.vm"
+            vb.gui = true
+            vb.memory = 1024
+        end
+
+        # Provisioning via bootstrap script
+        jenkins.vm.provision "shell", path: "bootstrap-jenkins.sh"
+    end
+end
