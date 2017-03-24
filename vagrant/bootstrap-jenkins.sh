@@ -80,3 +80,9 @@ while [ "$changed"  == "1" ]; do
 done
 
 restart_jenkins
+
+# Create jenkins jobs
+echo "--- Creating jenkins jobs ---"
+sudo java -jar jenkins-cli.jar -s $JENKINS_URL create-job continuous-deployment < /jenkins-config/continuous-deployment-config.xml
+
+restart_jenkins
