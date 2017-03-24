@@ -17,7 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
         # Shared folder for Jenkins VM config
         jenkins.vm.synced_folder ".", "/vagrant", disabled: true
-        jenkins.vm.synced_folder "jenkins-config/", "/jenkins-config"
+        jenkins.vm.synced_folder "../jenkins/config/", "/jenkins-config"
         
         # VirtualBox configuration
         jenkins.vm.provider "virtualbox" do |vb|
