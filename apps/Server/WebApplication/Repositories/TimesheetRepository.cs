@@ -11,12 +11,13 @@ namespace WebApplication.Repositories
 		/// <summary>
 		/// The database context.
 		/// </summary>
-		private TimesheetContext context;
+		private readonly TimesheetContext context;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:WebApplication.Repositories.TimesheetRepository"/> class.
 		/// </summary>
 		/// <param name="context">The database Context to use.</param>
+		/// <exception cref="ArgumentNullException">If the context argument is null.</exception>
 		public TimesheetRepository(TimesheetContext context)
 		{
 			if (context == null)
