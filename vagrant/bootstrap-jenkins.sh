@@ -33,18 +33,25 @@ install_plugin(){
   fi
 }
 
+echo "--- Adding apt repositories ---"
+sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
+wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
+sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
+sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
+
 echo "--- Updating apt package lists ---"
 sudo apt-get -y update
 
-# Install git
-echo "--- Installing git ---"
-sudo apt-get -y install git
+# Install git and unzip
+echo "--- Installing utilities ---"
+sudo apt-get -y install git unzip
+
+# Install dotnet core
+echo "--- Installing dotnet core ---"
+sudo apt-get -y install dotnet-dev-1.0.1
 
 # Install jenkins
 echo "--- Installing jenkins ---"
-wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
-sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-sudo apt-get -y update
 sudo apt-get -y install jenkins
 
 # Copy jenkins configuration file (which is in the shared directory)
