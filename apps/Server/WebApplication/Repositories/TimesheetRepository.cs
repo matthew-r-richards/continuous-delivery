@@ -28,7 +28,7 @@ namespace WebApplication.Repositories
 		/// <returns>A collection of <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
 		public IEnumerable<TimesheetEntry> GetAll()
 		{
-			throw new NotImplementedException();
+			return this.context.TimesheetEntries;
 		}
 	}
 }
