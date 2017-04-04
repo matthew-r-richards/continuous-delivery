@@ -16,5 +16,11 @@ namespace WebApplication.Repositories
 		/// </summary>
 		/// <param name="entry">The <see cref="T:WebApplication.Model.TimesheetEntry"/> to add.</param>
 		void Add(TimesheetEntry entry);
+
+		/// <summary>
+		/// Delete the entry with the specified Id.
+		/// </summary>
+		/// <param name="Id">The Id of the <see cref="T:WebApplication.Model.TimesheetEntry"/> to delete.</param>
+		void Delete(long Id);
 	}
 }
