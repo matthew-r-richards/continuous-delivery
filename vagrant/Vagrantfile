@@ -22,7 +22,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # VirtualBox configuration
         jenkins.vm.provider "virtualbox" do |vb|
             vb.name = "jenkins.vm"
-            vb.gui = false
             vb.memory = 1024
         end
 
