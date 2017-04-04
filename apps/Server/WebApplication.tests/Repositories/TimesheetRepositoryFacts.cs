@@ -10,6 +10,8 @@ namespace Repositories
 {
 	public class TimesheetRepositoryFacts
 	{
+		#region Constructor
+
 		public class Constructor
 		{
 			/// <summary>
@@ -22,6 +24,10 @@ namespace Repositories
 				Assert.Contains("context", ex.Message);
 			}
 		}
+
+		#endregion
+
+		#region GetAll
 
 		public class GetAll
 		{
@@ -72,18 +78,49 @@ namespace Repositories
 					Assert.Equal(0, result.Count());
 				}
 			}
+		}
 
-			/// <summary>
-			/// Builds the database context options.
-			/// </summary>
-			/// <param name="dbName">The database name to use.</param>
-			/// <returns>The context options.</returns>
-			private DbContextOptions<TimesheetContext> BuildContextOptions(string dbName)
+		#endregion
+
+		#region Add
+
+		public class Add
+		{
+			[Fact]
+			public void Adds_Entry_To_Database()
 			{
-				return new DbContextOptionsBuilder<TimesheetContext>()
-					.UseInMemoryDatabase(databaseName: dbName)
-					.Options;
+				var options = BuildContextOptions(nameof(Adds_Entry_To_Database));
+
+				// Run the test against one instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					context.Database.EnsureDeleted();
+					var repository = new TimesheetRepository(context);
+					repository.Add(new TimesheetEntry { TaskName = "Test Task", TaskDescription = "Test Task Description" });
+				}
+
+				// Use a separate instance of the context to verify correct data was saved to database
+				using (var context = new TimesheetContext(options))
+				{
+					Assert.Equal(1, context.TimesheetEntries.Count());
+					Assert.Equal("Test Task", context.TimesheetEntries.Single().TaskName);
+					Assert.Equal("Test Task Description", context.TimesheetEntries.Single().TaskDescription);
+				}
 			}
+		}
+
+		#endregion
+
+		/// <summary>
+		/// Builds the database context options.
+		/// </summary>
+		/// <param name="dbName">The database name to use.</param>
+		/// <returns>The context options.</returns>
+		private static DbContextOptions<TimesheetContext> BuildContextOptions(string dbName)
+		{
+			return new DbContextOptionsBuilder<TimesheetContext>()
+				.UseInMemoryDatabase(databaseName: dbName)
+				.Options;
 		}
 	}
 }

@@ -22,6 +22,12 @@ namespace WebApplication.Repositories
 			this.context = context;
 		}
 
+		public void Add(TimesheetEntry entry)
+		{
+			this.context.TimesheetEntries.Add(entry);
+			this.context.SaveChanges();
+		}
+
 		/// <summary>
 		/// Gets all Timesheet Entries.
 		/// </summary>

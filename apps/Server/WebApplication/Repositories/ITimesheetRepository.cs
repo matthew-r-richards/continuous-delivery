@@ -10,5 +10,11 @@ namespace WebApplication.Repositories
 		/// </summary>
 		/// <returns>A collection of <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
 		IEnumerable<TimesheetEntry> GetAll();
+
+		/// <summary>
+		/// Add the specified entry.
+		/// </summary>
+		/// <param name="entry">The <see cref="T:WebApplication.Model.TimesheetEntry"/> to add.</param>
+		void Add(TimesheetEntry entry);
 	}
 }
