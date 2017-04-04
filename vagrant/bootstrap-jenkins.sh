@@ -73,6 +73,7 @@ echo "--- Installing jenkins plugins ---"
 install_plugin "git"
 install_plugin "workflow-aggregator"
 install_plugin "xunit"
+install_plugin "mstest"
 
 changed=1
 
