@@ -14,6 +14,11 @@ namespace WebApplication.Repositories
 
 		public TimesheetRepository(TimesheetContext context)
 		{
+			if (context == null)
+			{
+				throw new ArgumentNullException(nameof(context));
+			}
+
 			this.context = context;
 		}
 
