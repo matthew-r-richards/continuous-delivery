@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using WebApplication.Models;
 using WebApplication.Repositories;
 
 namespace WebApplication.Controllers
 {
 	[Route("api/[controller]")]
-	public class EntriesController
+	public class EntriesController : Controller
 	{
 		private readonly ITimesheetRepository repository;
 
@@ -22,6 +24,16 @@ namespace WebApplication.Controllers
 			}
 
 			this.repository = repository;
+		}
+
+		/// <summary>
+		/// Gets all Timesheet Entries.
+		/// </summary>
+		/// <returns>A collection of <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
+		[HttpGet]
+		public IEnumerable<TimesheetEntry> GetAll()
+		{
+			return this.repository.GetAll();
 		}
 	}
 }

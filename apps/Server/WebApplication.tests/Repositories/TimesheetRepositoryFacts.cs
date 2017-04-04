@@ -75,7 +75,7 @@ namespace Repositories
 					context.Database.EnsureDeleted();
 					var repository = new TimesheetRepository(context);
 					var result = repository.GetAll();
-					Assert.Equal(0, result.Count());
+					Assert.Empty(result);
 				}
 			}
 		}
