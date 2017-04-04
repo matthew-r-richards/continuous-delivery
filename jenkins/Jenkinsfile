@@ -3,6 +3,9 @@ node {
         git url: 'https://github.com/matthew-r-richards/continuous-deployment.git'
     }
     stage("Build Server App") {
-        sh 'cd apps/Server; dotnet restore; dotnet build WebApplication'
+        sh 'cd apps/Server; dotnet restore; dotnet build WebApplication;'
+    }
+    stage("Unit Test Server App") {
+        sh 'cd apps/Server; dotnet test WebApplication.Tests'
     }
 }
