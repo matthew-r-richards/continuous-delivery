@@ -99,12 +99,67 @@ namespace Repositories
 					repository.Add(new TimesheetEntry { TaskName = "Test Task", TaskDescription = "Test Task Description" });
 				}
 
-				// Use a separate instance of the context to verify correct data was saved to database
+				// Use a separate instance of the context to verify correct data was added to the database
 				using (var context = new TimesheetContext(options))
 				{
 					Assert.Equal(1, context.TimesheetEntries.Count());
 					Assert.Equal("Test Task", context.TimesheetEntries.Single().TaskName);
 					Assert.Equal("Test Task Description", context.TimesheetEntries.Single().TaskDescription);
+				}
+			}
+		}
+
+		#endregion
+
+		#region Delete
+
+		public class Delete
+		{
+			[Fact]
+			public void Removes_Entry_From_Database_If_It_Exists()
+			{
+				var options = BuildContextOptions(nameof(Removes_Entry_From_Database_If_It_Exists));
+
+				long idToDelete;
+
+				// Set up the test against one instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 1", TaskDescription = "Task 1 Description" });
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 2", TaskDescription = "Task 2 Description" });
+					context.SaveChanges();
+
+					// Find out the ID of the first entry so that we can delete it
+					idToDelete = context.TimesheetEntries.ToList().First().Id;
+				}
+
+				// Run the test against another instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					var repository = new TimesheetRepository(context);
+					repository.Delete(idToDelete);
+				}
+
+				// Use a separate instance of the context to verify correct data was deleted from the database
+				using (var context = new TimesheetContext(options))
+				{
+					Assert.Equal(1, context.TimesheetEntries.Count());
+					Assert.Equal("Task 2", context.TimesheetEntries.Single().TaskName);
+					Assert.Equal("Task 2 Description", context.TimesheetEntries.Single().TaskDescription);
+				}
+			}
+
+			[Fact]
+			public void Throws_InvalidOperationException_If_Entry_Does_Not_Exist()
+			{
+				var options = BuildContextOptions(nameof(Throws_InvalidOperationException_If_Entry_Does_Not_Exist));
+
+				// Run the test with an empty db in the context
+				using (var context = new TimesheetContext(options))
+				{
+					context.Database.EnsureDeleted();
+					var repository = new TimesheetRepository(context);
+					Assert.Throws<InvalidOperationException>(() => repository.Delete(1));
 				}
 			}
 		}
