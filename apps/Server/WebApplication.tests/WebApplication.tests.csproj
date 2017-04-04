@@ -13,4 +13,7 @@
   <ItemGroup>
     <ProjectReference Include="..\WebApplication\WebApplication.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
 </Project>
