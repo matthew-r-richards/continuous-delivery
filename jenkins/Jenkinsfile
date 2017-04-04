@@ -1,5 +1,5 @@
 node {
-    stage("Build") {
-        echo "TODO: Build client and server apps"
+    stage("Build Server App") {
+        sh "cd apps/Server; dotnet restore; dotnet build --project WebApplication"
     }
 }
