@@ -87,6 +87,7 @@ namespace WebApplication.Controllers
 		/// <param name="id">The ID of the Timesheet Entry to delete.</param>
 		/// <response code="204">Entry deleted</response>
 		/// <response code="404">Entry not found</response>
+		[HttpDelete("{id}")]
 		public IActionResult Delete(long id)
 		{
 			var entry = this.repository.Find(id);
