@@ -7,3 +7,4 @@ ubuntu-xenial-16.04-cloudimg-console.log
 apps/Server/WebApplication.tests/bin
 apps/Server/publish
 apps/Server/WebApplication/bin
+apps/Client/node_modules
