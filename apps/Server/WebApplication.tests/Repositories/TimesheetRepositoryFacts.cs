@@ -10,8 +10,6 @@ namespace Repositories
 {
 	public class TimesheetRepositoryFacts
 	{
-		#region Constructor
-
 		public class Constructor
 		{
 			/// <summary>
@@ -25,9 +23,60 @@ namespace Repositories
 			}
 		}
 
-		#endregion
+		public class Find
+		{
+			[Fact]
+			public void Returns_Timesheet_Entry_If_Found()
+			{
+				var options = BuildContextOptions(nameof(Returns_Timesheet_Entry_If_Found));
 
-		#region GetAll
+				long idToFind;
+
+				// Set up the test against one instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					context.Database.EnsureDeleted();
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 1", TaskDescription = "Task 1 Description" });
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 2", TaskDescription = "Task 2 Description" });
+					context.SaveChanges();
+
+					// Find out the ID of the last entry so that we can find it
+					idToFind = context.TimesheetEntries.ToList().Last().Id;
+				}
+
+				// Run the test against another instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					var repository = new TimesheetRepository(context);
+					var result = repository.Find(idToFind);
+					Assert.Equal("Task 2", result.TaskName);
+					Assert.Equal("Task 2 Description", result.TaskDescription);
+				}
+			}
+
+			[Fact]
+			public void Returns_Null_If_Entry_Is_Not_Found()
+			{
+				var options = BuildContextOptions(nameof(Returns_Timesheet_Entry_If_Found));
+
+				// Set up the test against one instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					context.Database.EnsureDeleted();
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 1", TaskDescription = "Task 1 Description" });
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 2", TaskDescription = "Task 2 Description" });
+					context.SaveChanges();
+				}
+
+				// Run the test against another instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					var repository = new TimesheetRepository(context);
+					var result = repository.Find(-1);
+					Assert.Null(result);
+				}
+			}
+		}
 
 		public class GetAll
 		{
@@ -80,10 +129,6 @@ namespace Repositories
 			}
 		}
 
-		#endregion
-
-		#region Add
-
 		public class Add
 		{
 			[Fact]
@@ -109,10 +154,6 @@ namespace Repositories
 			}
 		}
 
-		#endregion
-
-		#region Delete
-
 		public class Delete
 		{
 			[Fact]
@@ -125,6 +166,7 @@ namespace Repositories
 				// Set up the test against one instance of the context
 				using (var context = new TimesheetContext(options))
 				{
+					context.Database.EnsureDeleted();
 					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 1", TaskDescription = "Task 1 Description" });
 					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 2", TaskDescription = "Task 2 Description" });
 					context.SaveChanges();
@@ -163,8 +205,6 @@ namespace Repositories
 				}
 			}
 		}
-
-		#endregion
 
 		/// <summary>
 		/// Builds the database context options.

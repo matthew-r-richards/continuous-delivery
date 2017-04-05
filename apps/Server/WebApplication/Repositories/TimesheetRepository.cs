@@ -51,6 +51,16 @@ namespace WebApplication.Repositories
 		}
 
 		/// <summary>
+		/// Finds the Timesheet Entry with the specified Id.
+		/// </summary>
+		/// <returns>A <see cref="T:WebApplication.Model.TimesheetEntry"/> if found, null otherwise.</returns>
+		/// <param name="id">The Id of the Entry.</param>
+		public TimesheetEntry Find(long id)
+		{
+			return this.context.TimesheetEntries.FirstOrDefault(te => te.Id == id);
+		}
+
+		/// <summary>
 		/// Gets all Timesheet Entries.
 		/// </summary>
 		/// <returns>A collection of <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
