@@ -27,6 +27,23 @@ namespace WebApplication.Controllers
 		}
 
 		/// <summary>
+		/// Gets the Timesheet Entry with the specified Id.
+		/// </summary>
+		/// <returns>A <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
+		/// <param name="id">The Id of the Timesheet Entry to get.</param>
+		[HttpGet("{id}", Name = "GetEntry")]
+		public IActionResult GetById(long id)
+		{
+			var entry = this.repository.Find(id);
+			if (entry == null)
+			{
+				return NotFound();
+			}
+
+			return new ObjectResult(entry);
+		}
+
+		/// <summary>
 		/// Gets all Timesheet Entries.
 		/// </summary>
 		/// <returns>A collection of <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>

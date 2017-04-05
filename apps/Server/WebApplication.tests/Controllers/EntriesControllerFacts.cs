@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using NSubstitute;
 using WebApplication.Controllers;
 using WebApplication.Models;
@@ -18,6 +19,54 @@ namespace Controllers
 			{
 				var ex = Assert.Throws<ArgumentNullException>(() => new EntriesController(null));
 				Assert.Contains("repository", ex.Message);
+			}
+		}
+
+		public class GetById
+		{
+			[Fact]
+			public void Returns_Timesheet_Entry_If_Found()
+			{
+				// Create some test data
+				var testData = new TimesheetEntry { Id = 1, TaskName = "Task 1", TaskDescription = "Task 1 Description" };
+
+				// Mock out the repository to return the test data
+				var repository = Substitute.For<ITimesheetRepository>();
+				repository.Find(Arg.Any<long>()).Returns(testData);
+
+				// Call the controller
+				using (var controller = new EntriesController(repository))
+				{
+					var response = controller.GetById(1);
+
+					// Check the result
+					var result = response as ObjectResult;
+					Assert.NotNull(result);
+					var entry = result.Value as TimesheetEntry;
+					Assert.NotNull(entry);
+					Assert.Equal(1, entry.Id);
+					Assert.Equal("Task 1", entry.TaskName);
+					Assert.Equal("Task 1 Description", entry.TaskDescription);
+				}
+			}
+
+			[Fact]
+			public void Returns_NotFound_If_Timesheet_Entry_Does_Not_Exist()
+			{
+				// Mock out the repository to return null (entry not found)
+				var repository = Substitute.For<ITimesheetRepository>();
+				repository.Find(Arg.Any<long>()).Returns(null as TimesheetEntry);
+
+				// Call the controller
+				using (var controller = new EntriesController(repository))
+				{
+					var response = controller.GetById(-1);
+
+					// Check the result
+					var result = response as NotFoundResult;
+					Assert.NotNull(result);
+					Assert.Equal(404, result.StatusCode);
+				}
 			}
 		}
 
