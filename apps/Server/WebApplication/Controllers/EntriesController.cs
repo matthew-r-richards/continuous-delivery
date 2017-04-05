@@ -59,7 +59,7 @@ namespace WebApplication.Controllers
 		/// <returns>The created <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
 		/// <param name="entry">The Timesheet Entry to add.</param>
 		[HttpPost]
-		public IActionResult Add(TimesheetEntry entry)
+		public IActionResult Add([FromBody]TimesheetEntry entry)
 		{
 			if (entry == null)
 			{
