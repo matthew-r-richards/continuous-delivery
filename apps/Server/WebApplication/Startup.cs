@@ -63,7 +63,10 @@ namespace WebApplication
             app.UseMvc();
 
 			// Set up Swagger and its UI
-			app.UseSwagger();
+			app.UseSwagger(options =>
+			{
+				options.PreSerializeFilters.Add((swagger, httpReq) => swagger.Host = httpReq.Host.Value);
+			});
 			app.UseSwaggerUI(options =>
 			{
 				options.SwaggerEndpoint("/swagger/v1/swagger.json", "Timesheet Entries API V1");
