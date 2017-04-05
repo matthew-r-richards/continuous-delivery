@@ -156,7 +156,7 @@ namespace Controllers
 					Assert.Equal("New Task Description", entry.TaskDescription);
 				}
 			}
-
+			[Fact]
 			public void Returns_Bad_Request_If_Entry_Is_Null()
 			{
 				// Mock out the repository
@@ -174,6 +174,59 @@ namespace Controllers
 					var status = result as StatusCodeResult;
 					Assert.NotNull(status);
 					Assert.Equal(400, status.StatusCode);
+				}
+			}
+		}
+
+		public class Delete
+		{
+			[Fact]
+			public void Removes_Timesheet_Entry_From_Database_If_It_Exists()
+			{
+				// Create the test entry
+				var testData = new TimesheetEntry { Id = 1, TaskName = "Task", TaskDescription = "Task Description" };
+
+				// Mock out the repository to return the test data (entry found)
+				var repository = Substitute.For<ITimesheetRepository>();
+				repository.Find(1).Returns(testData);
+
+				// Call the controller
+				using (var controller = new EntriesController(repository))
+				{
+					var result = controller.Delete(1);
+
+					// Check the repository was called to find the entry
+					repository.Received().Find(1);
+
+					// Check the repository was called to delete the entry
+					repository.Received().Delete(1);
+
+					// Check the response
+					var status = result as StatusCodeResult;
+					Assert.NotNull(status);
+					Assert.Equal(204, status.StatusCode);
+				}
+			}
+
+			[Fact]
+			public void Returns_NotFound_If_Timesheet_Entry_Does_Not_Exist()
+			{
+				// Mock out the repository to return null (entry not found)
+				var repository = Substitute.For<ITimesheetRepository>();
+				repository.Find(Arg.Any<long>()).Returns(null as TimesheetEntry);
+
+				// Call the controller
+				using (var controller = new EntriesController(repository))
+				{
+					var response = controller.Delete(-1);
+
+					// Check the result
+					var result = response as NotFoundResult;
+					Assert.NotNull(result);
+					Assert.Equal(404, result.StatusCode);
+
+					// Check the repository was not called to delete the entry
+					repository.DidNotReceive().Delete(Arg.Any<long>());
 				}
 			}
 		}

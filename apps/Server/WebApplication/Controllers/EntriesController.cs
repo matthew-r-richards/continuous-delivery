@@ -31,7 +31,11 @@ namespace WebApplication.Controllers
 		/// </summary>
 		/// <returns>A <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
 		/// <param name="id">The Id of the Timesheet Entry to get.</param>
+		/// <response code="200">Entry found</response>
+		/// <response code="404">Entry not found</response>
 		[HttpGet("{id}", Name = "GetEntry")]
+		[ProducesResponseType(typeof(TimesheetEntry), 200)]
+		[ProducesResponseType(typeof(void), 404)]
 		public IActionResult GetById(long id)
 		{
 			var entry = this.repository.Find(id);
@@ -47,6 +51,7 @@ namespace WebApplication.Controllers
 		/// Gets all Timesheet Entries.
 		/// </summary>
 		/// <returns>A collection of <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
+		/// <response code="200">Success</response>
 		[HttpGet]
 		public IEnumerable<TimesheetEntry> GetAll()
 		{
@@ -58,7 +63,11 @@ namespace WebApplication.Controllers
 		/// </summary>
 		/// <returns>The created <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
 		/// <param name="entry">The Timesheet Entry to add.</param>
+		/// <response code="201">Entry created</response>
+		/// <response code="400">Invalid Entry supplied</response>
 		[HttpPost]
+		[ProducesResponseType(typeof(TimesheetEntry), 201)]
+		[ProducesResponseType(typeof(void), 400)]
 		public IActionResult Add([FromBody]TimesheetEntry entry)
 		{
 			if (entry == null)
@@ -68,7 +77,26 @@ namespace WebApplication.Controllers
 
 			this.repository.Add(entry);
 
-			return CreatedAtRoute("GetEntry", entry);
+			return CreatedAtRoute("GetEntry", new { id = entry.Id }, entry);
+		}
+
+		/// <summary>
+		/// Delete the specified Timesheet Entry.
+		/// </summary>
+		/// <returns>No content.</returns>
+		/// <param name="id">The ID of the Timesheet Entry to delete.</param>
+		/// <response code="204">Entry deleted</response>
+		/// <response code="404">Entry not found</response>
+		public IActionResult Delete(long id)
+		{
+			var entry = this.repository.Find(id);
+			if (entry == null)
+			{
+				return NotFound();
+			}
+
+			this.repository.Delete(id);
+			return NoContent();
 		}
 	}
 }
