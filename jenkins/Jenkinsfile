@@ -9,6 +9,6 @@ node {
         sh 'cd apps/Server; dotnet test ./WebApplication.tests/WebApplication.tests.csproj'
     }
     stage("Publish Server App") {
-        sh 'cd app/Server; dotnet publish WebApplication -c Release -o ../publish'
+        sh 'cd apps/Server; dotnet publish WebApplication -c Release -o ../publish'
     }
 }
