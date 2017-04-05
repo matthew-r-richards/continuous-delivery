@@ -52,5 +52,23 @@ namespace WebApplication.Controllers
 		{
 			return this.repository.GetAll();
 		}
+
+		/// <summary>
+		/// Add the specified Timesheet Entry.
+		/// </summary>
+		/// <returns>The created <see cref="T:WebApplication.Model.TimesheetEntry"/>.</returns>
+		/// <param name="entry">The Timesheet Entry to add.</param>
+		[HttpPost]
+		public IActionResult Add(TimesheetEntry entry)
+		{
+			if (entry == null)
+			{
+				return BadRequest();
+			}
+
+			this.repository.Add(entry);
+
+			return CreatedAtRoute("GetEntry", entry);
+		}
 	}
 }

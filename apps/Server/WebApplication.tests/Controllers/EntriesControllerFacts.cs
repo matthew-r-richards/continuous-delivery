@@ -125,5 +125,57 @@ namespace Controllers
 				}
 			}
 		}
+
+		public class Add
+		{
+			[Fact]
+			public void Adds_Entry_To_Database_And_Returns_Location_Of_New_Entry()
+			{
+				// Create the test entry
+				var testData = new TimesheetEntry { TaskName = "New Task", TaskDescription = "New Task Description" };
+
+				// Mock out the repository
+				var repository = Substitute.For<ITimesheetRepository>();
+
+				// Call the controller
+				using (var controller = new EntriesController(repository))
+				{
+					var response = controller.Add(testData);
+
+					// Check the repository call
+					repository.Received().Add(Arg.Is<TimesheetEntry>(testData));
+
+					// Check the response
+					var result = response as CreatedAtRouteResult;
+					Assert.NotNull(result);
+					var entry = result.Value as TimesheetEntry;
+					Assert.NotNull(entry);
+					Assert.Equal(201, result.StatusCode);
+					Assert.Equal("GetEntry", result.RouteName);
+					Assert.Equal("New Task", entry.TaskName);
+					Assert.Equal("New Task Description", entry.TaskDescription);
+				}
+			}
+
+			public void Returns_Bad_Request_If_Entry_Is_Null()
+			{
+				// Mock out the repository
+				var repository = Substitute.For<ITimesheetRepository>();
+
+				// Call the controller
+				using (var controller = new EntriesController(repository))
+				{
+					var result = controller.Add(null);
+
+					// Check the repository was not called
+					repository.DidNotReceive().Add(Arg.Any<TimesheetEntry>());
+
+					// Check the response
+					var status = result as StatusCodeResult;
+					Assert.NotNull(status);
+					Assert.Equal(400, status.StatusCode);
+				}
+			}
+		}
 	}
 }
