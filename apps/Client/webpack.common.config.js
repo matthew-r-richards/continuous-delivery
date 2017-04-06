@@ -31,10 +31,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      // when running webpack -p (to build for production) process.env.NODE_ENV will be set to 'production'
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
-    }),
     new HtmlWebpackPlugin({
       // automatically adds JS, CSS etc. tags to this html file
       template: 'src/index.html'
