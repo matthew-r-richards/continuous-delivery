@@ -1,13 +1,11 @@
-const express = require("express");
+const express = require('express');
+const path = require('path');
 const app = express();
 
 const PORT = 3000;
 
-// serve static content
-app.use(express.static(__dirname));
-
 // if we're running in development, use the webpack middleware to serve up the JS
-if (app.settings.env == 'development') {
+if (process.env.NODE_ENV == 'development') {
     console.log('Running in development mode...');
     const webpack = require('webpack');
     const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -23,11 +21,14 @@ if (app.settings.env == 'development') {
     app.use(webpackHotMiddleware(compiler, {
         log: console.log
     }))
+} else {
+    console.log('Running in production mode...');
+    app.use(express.static(path.join(__dirname, 'dist')));
 }
 
 // serve up the index page
 app.get("/", (req,res) => {
-  res.sendFile(__dirname + "index.html");
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {

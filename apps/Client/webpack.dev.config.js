@@ -1,7 +1,8 @@
-var path = require('path');
-var webpack = require('webpack');
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const commonConfig = require('./webpack.common.config');
  
-module.exports = {
+module.exports = webpackMerge(commonConfig, {
   entry: 
   [
     'webpack/hot/dev-server',
@@ -11,24 +12,7 @@ module.exports = {
   output:
   {
     path: '/',
-    publicPath: 'http://localhost:3000/js/',
+    publicPath: 'http://localhost:3000/',
     filename: 'bundle.js'
-  },
-  module: {
-    loaders: [
-      {
-        // Skip any files outside of the project's `src` directory
-        include: [
-            path.resolve(__dirname, "src"),
-        ],
-        // Only run `.js` and `.jsx` files through Babel
-        test: /.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'react']
-        }
-      }
-    ]
-  },
-};
+  }
+});

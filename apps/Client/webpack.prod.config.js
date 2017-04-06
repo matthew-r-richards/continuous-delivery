@@ -1,28 +1,12 @@
-var path = require('path');
-var webpack = require('webpack');
+const webpack = require('webpack');
+const webpackMerge = require('webpack-merge');
+const commonConfig = require('./webpack.common.config');
+const path = require('path');
  
-module.exports = {
-  entry: './src/main.js',
+module.exports = webpackMerge(commonConfig, {
   output:
   {
-    path: path.join(__dirname, 'src', 'js'),
+    path: path.join(__dirname, 'src', 'dist'),
     filename: 'bundle.js'
-  },
-  module: {
-    loaders: [
-      {
-        // Skip any files outside of the project's `src` directory
-        include: [
-            path.resolve(__dirname, "src"),
-        ],
-        // Only run `.js` and `.jsx` files through Babel
-        test: /.jsx?$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'react']
-        }
-      }
-    ]
-  },
-};
+  }
+});
