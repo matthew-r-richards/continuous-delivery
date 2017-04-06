@@ -15,6 +15,7 @@ if (process.env.NODE_ENV == 'development') {
 
     app.use(webpackDevMiddleware(compiler, {
         publicPath: config.output.publicPath,
+        hot: true,
         stats: {colors: true}
     }));
 

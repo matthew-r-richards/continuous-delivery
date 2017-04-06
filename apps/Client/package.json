@@ -2,10 +2,10 @@
   "name": "client-app",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "main.js",
   "scripts": {
     "build": "rimraf dist && webpack -p --config webpack.prod.config",
-    "dev": "nodemon src/app.js",
+    "dev": "NODE_ENV=development nodemon src/app.js",
     "start": "node src/app.js"
   },
   "author": "",
@@ -16,7 +16,8 @@
     "path": "^0.12.7",
     "react": "^15.4.2",
     "react-bootstrap": "^0.30.8",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "react-router": "^4.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.24.0",

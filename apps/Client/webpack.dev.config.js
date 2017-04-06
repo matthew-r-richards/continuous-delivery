@@ -17,6 +17,8 @@ module.exports = webpackMerge(commonConfig, {
     filename: 'bundle.js'
   },
   plugins: [
-    new ExtractTextPlugin('bundle.css')
+    new ExtractTextPlugin('bundle.css'),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NoEmitOnErrorsPlugin()
   ]
 });
