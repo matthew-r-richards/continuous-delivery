@@ -10,3 +10,4 @@ apps/Server/WebApplication/bin
 apps/Client/node_modules
 npm-debug.log
 apps/Client/src/dist
+apps/Client/dist

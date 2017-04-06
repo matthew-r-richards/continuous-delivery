@@ -23,12 +23,12 @@ if (process.env.NODE_ENV == 'development') {
     }))
 } else {
     console.log('Running in production mode...');
-    app.use(express.static(path.join(__dirname, 'dist')));
+    app.use(express.static(path.join(__dirname, '../dist')));
 }
 
 // serve up the index page
 app.get("/", (req,res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, '../dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
