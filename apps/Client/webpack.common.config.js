@@ -27,8 +27,13 @@ module.exports = {
       {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader?sourceMap' })
-      },
+      }
     ]
+  },
+  externals: {
+    'cheerio': 'window',
+    'react/lib/ExecutionEnvironment': true,
+    'react/lib/ReactContext': true,
   },
   plugins: [
     new HtmlWebpackPlugin({
