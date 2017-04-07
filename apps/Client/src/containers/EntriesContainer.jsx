@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import EntryInput from '../components/EntryInput';
 import EntryList from '../components/EntryList'
+import TimesheetEntry from '../models/TimesheetEntry';
 
 export default class EntriesContainer extends Component {
     constructor(props) {
@@ -12,7 +13,9 @@ export default class EntriesContainer extends Component {
         this.addEntry = this.addEntry.bind(this);
     }
 
-    addEntry(entry) {
+    addEntry(name, description) {
+        const entry = new TimesheetEntry(name, description, new Date(), null);
+
         this.setState({
             // do it this way so that we don't mutate existing state
             entries: [].concat(this.state.entries).concat([entry])
