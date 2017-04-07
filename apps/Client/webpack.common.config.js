@@ -5,13 +5,12 @@ const path = require('path');
 
 module.exports = {
   entry: './src/main.js',
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
   module: {
     loaders: [
       {
-        // Skip any files outside of the project's `src` directory
-        include: [
-            path.resolve(__dirname, "src"),
-        ],
         // Only run `.js` and `.jsx` files through Babel
         test: /.jsx?$/,
         loader: 'babel-loader',
