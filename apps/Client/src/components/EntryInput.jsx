@@ -5,3 +5,7 @@ export default class EntryList extends Component {
         return (<div/>)
     }
 }
+
+EntryList.PropTypes = {
+    onSubmit: React.PropTypes.func.isRequired
+};
