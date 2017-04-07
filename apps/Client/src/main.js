@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
-import App from './components/App.jsx';
+import AppContainer from './containers/AppContainer';
 
 const mountNode = document.querySelector('#main');
-ReactDOM.render(<App />, mountNode);
+ReactDOM.render(<AppContainer/>, mountNode);
