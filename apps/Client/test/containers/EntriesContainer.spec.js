@@ -18,4 +18,8 @@ describe('<EntriesContainer/>', () => {
       <EntryList/>
     ])).to.equal(true);
   });
+
+  it('should start with an empty entries list', () => {
+    expect(wrapper.state('entries')).to.eql([]);
+  });
 });
