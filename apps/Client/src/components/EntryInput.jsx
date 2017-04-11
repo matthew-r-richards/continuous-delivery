@@ -42,21 +42,21 @@ export default class EntryInput extends Component {
     render() {
         return (
             <Grid>
-            <Form inline>
-                <FormGroup>
-                    <ControlLabel>Name</ControlLabel>
+                <Form inline>
+                    <FormGroup>
+                        <ControlLabel>Name</ControlLabel>
+                        {'  '}
+                        <FormControl type="text" id="nameInput" value={this.state.name} onChange={this.setName} placeholder="Task name"/>
+                    </FormGroup>
                     {'  '}
-                    <FormControl type="text" id="nameInput" value={this.state.name} onChange={this.setName} placeholder="Task name"/>
-                </FormGroup>
-                {'  '}
-                <FormGroup>
-                    <ControlLabel>Description</ControlLabel>
+                    <FormGroup>
+                        <ControlLabel>Description</ControlLabel>
+                        {'  '}
+                        <FormControl type="text" id="descInput" value={this.state.description} onChange={this.setDescription} placeholder="Task description"/>
+                    </FormGroup>
                     {'  '}
-                    <FormControl type="text" id="descInput" value={this.state.description} onChange={this.setDescription} placeholder="Task description"/>
-                </FormGroup>
-                {'  '}
-                <Button onClick={this.handleClick} bsStyle="success">Start</Button>
-            </Form>
+                    <Button onClick={this.handleClick} bsStyle="success">Start</Button>
+                </Form>
             </Grid>
         )
     }
