@@ -18,15 +18,17 @@ export default class EntriesContainer extends Component {
     }
 
     componentDidMount() {
+        // listen for changes in the store
         EntryStore.addChangeListener(this.onChange);
     }
 
     componentWillUnmount() {
+        // stop listening for changes in the store
         EntryStore.removeChangeListener(this.onChange);
     }
 
     onChange() {
-        console.log('EntriesContainer.onChange triggered');
+        // update the component state with the values from the store
         this.setState({
             entries: EntryStore.getAllEntries()
         })
@@ -34,14 +36,6 @@ export default class EntriesContainer extends Component {
 
     addEntry(name, description) {
         EntryActionCreators.addEntry(name, description);
-        
-        /*
-        const entry = new TimesheetEntry(name, description, new Date(), null);
-
-        this.setState({
-            // do it this way so that we don't mutate existing state
-            entries: [].concat(this.state.entries).concat([entry])
-        })*/
     }
 
     render() {

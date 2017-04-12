@@ -24,12 +24,13 @@ const EntryStore = Object.assign({}, EventEmitter.prototype, {
     }
 });
 
+// register the callback with the dispatcher for the RECEIVE_ADD_ENTRY action
 EntryStore.dispatchToken = dispatcher.register(function(payload) {
     const action = payload.action;
 
     switch (action.type) {
         case ActionTypes.RECEIVE_ADD_ENTRY:
-            entries.push(action.json);
+            entries.push(action.data);
             EntryStore.emitChange();
             break;
 
