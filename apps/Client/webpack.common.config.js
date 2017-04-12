@@ -1,12 +1,18 @@
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const path = require('path');
 
 module.exports = {
   entry: './src/main.js',
   resolve: {
-    extensions: ['.js', '.jsx']
+    extensions: ['.js', '.jsx'],
+    modules: [
+      __dirname,
+      path.resolve(__dirname, './node_modules'),
+
+      path.resolve(__dirname, './src'),
+      path.resolve(__dirname, './test')
+    ]
   },
   module: {
     loaders: [
@@ -34,11 +40,5 @@ module.exports = {
     'react/lib/ExecutionEnvironment': true,
     'react/lib/ReactContext': true,
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      // automatically adds JS, CSS etc. tags to this html file
-      template: 'src/index.html'
-    })
-  ],
-  devtool: 'source-map'
+  devtool: 'source-map',
 }

@@ -11,3 +11,4 @@ apps/Client/node_modules
 npm-debug.log
 apps/Client/src/dist
 apps/Client/dist
+apps/Client/.tmp
