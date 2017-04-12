@@ -1,5 +1,5 @@
-import dispatcher from '../dispatcher/EntryDispatcher';
-import { ActionTypes } from '../constants/ApiConstants.js';
+import dispatcher from 'dispatcher/EntryDispatcher';
+import { ActionTypes } from 'constants/ApiConstants.js';
 import { EventEmitter } from 'events';
 
 const CHANGE_EVENT = 'change';
