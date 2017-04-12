@@ -40,6 +40,6 @@ describe('<EntryInput/>', () => {
       startButton.simulate('click');
 
       expect(addEntrySpy.calledOnce).to.equal(true);
-      expect(addEntrySpy.calledWith())
+      expect(addEntrySpy.calledWith('new name', 'new description'));
   })
 });
