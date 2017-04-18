@@ -7,16 +7,21 @@ import EntryInput from 'components/EntryInput';
 import EntryList from 'components/EntryList';
 
 describe('<EntriesContainer/>', () => {
+  let EntriesContainer;
   let wrapper;
 
   // create a stub for the EntryStore and EntryActionCreators
-  const stubbedStore = { getAllEntries: stub() };
+  const stubbedStore = {
+    getAllEntries: stub(),
+    addChangeListener: stub(),
+    removeChangeListener: stub()
+  };
   const stubbedActions = { addEntry: stub() };
 
   beforeEach(() => {
     const inject = require('inject-loader!containers/EntriesContainer.jsx');
     
-    let EntriesContainer = inject({
+    EntriesContainer = inject({
       'stores/EntryStore': stubbedStore,
       'actions/EntryActionCreators': stubbedActions
     }).default;
@@ -53,4 +58,21 @@ describe('<EntriesContainer/>', () => {
 
     expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.eql(true);
   })
+
+  it('should update entries when notified of a change', () => {
+    // TODO: mock the return and then make sure that entries is set appropriately
+    wrapper.instance().onChange();
+    expect(stubbedStore.getAllEntries.called).to.eql(true);
+  });
+
+  it('should add a change listener on mounting', () => {
+    wrapper = mount(<EntriesContainer/>);
+    expect(stubbedStore.addChangeListener.calledOnce).to.eql(true);
+  });
+
+  it('should remove the change listener on unmounting', () => {
+    wrapper = mount(<EntriesContainer/>);
+    wrapper.unmount();
+    expect(stubbedStore.removeChangeListener.calledOnce).to.eql(true);
+  });
 });
