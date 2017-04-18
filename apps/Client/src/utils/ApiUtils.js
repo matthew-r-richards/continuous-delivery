@@ -1,6 +1,6 @@
-import serverActionCreators from '../actions/ServerActionCreators';
-import { APIEndpoints } from '../constants/ApiConstants';
-import TimesheetEntry from '../models/TimesheetEntry';
+import serverActionCreators from 'actions/ServerActionCreators';
+import { APIEndpoints } from 'constants/ApiConstants';
+import TimesheetEntry from 'models/TimesheetEntry';
 
 export default {
     addEntry: (name, description) => {
