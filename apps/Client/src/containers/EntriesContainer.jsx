@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import EntryInput from 'components/EntryInput';
 import EntryList from 'components/EntryList'
-import TimesheetEntry from 'models/TimesheetEntry';
 
 import EntryActionCreators from 'actions/EntryActionCreators';
 import EntryStore from 'stores/EntryStore';
