@@ -26,6 +26,9 @@ describe('<EntriesContainer/>', () => {
       'actions/EntryActionCreators': stubbedActions
     }).default;
 
+    // set the EntryStore stub to return a simple set of entries
+    stubbedStore.getAllEntries.returns(['entry 1', 'entry 2']);
+
     wrapper = shallow(<EntriesContainer/>);
   });
 
@@ -37,8 +40,11 @@ describe('<EntriesContainer/>', () => {
   });
 
   it('should fetch entries from the EntryStore on start', () => {
-    // TODO: mock the return and then make sure that entries is set appropriately
     expect(stubbedStore.getAllEntries.called).to.eql(true);
+
+    expect(wrapper.state().entries.length).to.eql(2);
+    expect(wrapper.state().entries[0]).to.eql('entry 1');
+    expect(wrapper.state().entries[1]).to.eql('entry 2');
   });
 
   it('creates an action to add an entry', () => {
@@ -60,9 +66,16 @@ describe('<EntriesContainer/>', () => {
   })
 
   it('should update entries when notified of a change', () => {
-    // TODO: mock the return and then make sure that entries is set appropriately
+    // set the EntryStore stub to return a changed (simple) set of entries
+    stubbedStore.getAllEntries.returns(['entry 1', 'entry 2', 'entry 3']);
+
     wrapper.instance().onChange();
+
     expect(stubbedStore.getAllEntries.called).to.eql(true);
+    expect(wrapper.state().entries.length).to.eql(3);
+    expect(wrapper.state().entries[0]).to.eql('entry 1');
+    expect(wrapper.state().entries[1]).to.eql('entry 2');
+    expect(wrapper.state().entries[2]).to.eql('entry 3');
   });
 
   it('should add a change listener on mounting', () => {
