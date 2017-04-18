@@ -6,12 +6,13 @@ import { stub } from 'sinon';
 import EntryInput from 'components/EntryInput';
 import EntryList from 'components/EntryList';
 
-// create a stub for the EntryStore and EntryActionCreators
-const stubbedStore = { getAllEntries: stub() };
-const stubbedActions = { addEntry: stub() };
-
 describe('<EntriesContainer/>', () => {
   let wrapper;
+
+  // create a stub for the EntryStore and EntryActionCreators
+  const stubbedStore = { getAllEntries: stub() };
+  const stubbedActions = { addEntry: stub() };
+
   beforeEach(() => {
     const inject = require('inject-loader!containers/EntriesContainer.jsx');
     
@@ -31,12 +32,11 @@ describe('<EntriesContainer/>', () => {
   });
 
   it('should fetch entries from the EntryStore on start', () => {
-    // TODO: I mock the return and then make sure that entries is set appropriately
+    // TODO: mock the return and then make sure that entries is set appropriately
     expect(stubbedStore.getAllEntries.called).to.eql(true);
   });
 
   it('creates an action to add an entry', () => {
-    // need to update this test
     wrapper.instance().addEntry('new name', 'new description');
     expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.eql(true);
   });

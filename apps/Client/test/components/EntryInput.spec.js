@@ -3,7 +3,7 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { spy } from 'sinon';
 
-import EntryInput from '../../src/components/EntryInput';
+import EntryInput from 'components/EntryInput';
 
 describe('<EntryInput/>', () => {
   let wrapper;

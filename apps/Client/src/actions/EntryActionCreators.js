@@ -1,6 +1,6 @@
-import dispatcher from '../dispatcher/EntryDispatcher';
-import { ActionTypes } from '../constants/ApiConstants';
-import apiUtils from '../utils/ApiUtils';
+import dispatcher from 'dispatcher/EntryDispatcher';
+import { ActionTypes } from 'constants/ApiConstants';
+import apiUtils from 'utils/ApiUtils';
 
 export default {
     // create the ADD_ENTRY action and initiate the corresponding API call
