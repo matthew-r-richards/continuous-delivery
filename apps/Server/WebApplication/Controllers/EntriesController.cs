@@ -18,12 +18,7 @@ namespace WebApplication.Controllers
 		/// <exception cref="ArgumentNullException">If the repository argument is null.</exception>
 		public EntriesController(ITimesheetRepository repository)
 		{
-			if (repository == null)
-			{
-				throw new ArgumentNullException(nameof(repository));
-			}
-
-			this.repository = repository;
+			this.repository = repository ?? throw new ArgumentNullException(nameof(repository));
 		}
 
 		/// <summary>
