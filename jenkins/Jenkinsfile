@@ -3,6 +3,6 @@ node {
         git url: 'https://github.com/matthew-r-richards/continuous-deployment.git'
     }
     stage("Build, Test and Publish Server App") {
-        sh 'cd apps/Server; docker run -it --rm -v "$pwd\:/sln" --workdir /sln microsoft/aspnetcore-build sh ./build.sh;'
+        sh 'cd apps/Server; docker run -it --rm -v $(pwd):/sln --workdir /sln microsoft/aspnetcore-build sh ./build.sh;'
     }
 }
