@@ -23,6 +23,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
         # Shared folder for Jenkins VM config
         jenkins.vm.synced_folder ".", "/vagrant", disabled: true
         jenkins.vm.synced_folder "../jenkins/config/", "/jenkins-config"
+
+        # Provision docker
+        jenkins.vm.provision "docker", images: ["node", "microsoft/aspnetcore", "microsoft/aspnetcore-build"]
         
         # VirtualBox configuration
         jenkins.vm.provider "virtualbox" do |vb|
