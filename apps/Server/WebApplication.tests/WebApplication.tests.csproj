@@ -17,5 +17,6 @@
   <ItemGroup>
     <Folder Include="Repositories\" />
     <Folder Include="Controllers\" />
+    <Folder Include="Models\" />
   </ItemGroup>
 </Project>
