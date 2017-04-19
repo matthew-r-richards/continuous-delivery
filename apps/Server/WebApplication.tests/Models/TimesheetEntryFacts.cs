@@ -32,7 +32,7 @@ namespace Models
 		/// <param name="secondsTolerance">The number of seconds to use for the comparison tolerance.</param>
 		private static bool AreDatesApproximatelyEqual(DateTime date1, DateTime date2, int secondsTolerance)
 		{
-			return date1.Ticks > (date2.Ticks + secondsTolerance * 1000);
+			return date1.Ticks < (date2.Ticks + secondsTolerance * 1000);
 		}
 	}
 }
