@@ -20,12 +20,7 @@ namespace WebApplication.Repositories
 		/// <exception cref="ArgumentNullException">If the context argument is null.</exception>
 		public TimesheetRepository(TimesheetContext context)
 		{
-			if (context == null)
-			{
-				throw new ArgumentNullException(nameof(context));
-			}
-
-			this.context = context;
+			this.context = context ?? throw new ArgumentNullException(nameof(context));
 		}
 
 		/// <summary>

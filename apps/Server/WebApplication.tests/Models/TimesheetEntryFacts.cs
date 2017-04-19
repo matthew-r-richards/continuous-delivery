@@ -18,7 +18,8 @@ namespace Models
 			[Fact]
 			public void Sets_TaskEnd_To_Null()
 			{
-
+				var entry = new TimesheetEntry();
+				Assert.Null(entry.TaskEnd);
 			}
 		}
 
