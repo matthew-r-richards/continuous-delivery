@@ -2,9 +2,9 @@ import React from 'react';
 import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 
-import AppContainer from '../../src/containers/AppContainer';
-import Header from '../../src/components/Header';
-import EntriesContainer from '../../src/containers/EntriesContainer';
+import AppContainer from 'containers/AppContainer';
+import Header from 'components/Header';
+import EntriesContainer from 'containers/EntriesContainer';
 
 describe('<App/>', () => {
   let wrapper;
