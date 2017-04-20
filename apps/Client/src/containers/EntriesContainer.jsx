@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Grid, Row, Col } from 'react-bootstrap';
 
 import EntryInput from 'components/EntryInput';
 import EntryList from 'components/EntryList'
@@ -39,10 +40,14 @@ export default class EntriesContainer extends Component {
 
     render() {
         return (
-            <div>
-                <EntryInput onSubmit={this.addEntry}/>
-                <EntryList/>
-            </div>
+            <Grid>
+                <Row className="grid-row">
+                    <EntryInput onSubmit={this.addEntry}/>
+                </Row>
+                <Row className="grid-row">
+                    <EntryList/>
+                </Row>
+            </Grid>
         )
     }
 }
