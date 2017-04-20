@@ -1,8 +1,0 @@
-version: '3'
-services:
-  server-app-build:
-    image: microsoft/aspnetcore-build
-    volumes:
-      - .:/sln
-    working_dir: /sln
-    entrypoint: ["sh", "./build.sh"]
