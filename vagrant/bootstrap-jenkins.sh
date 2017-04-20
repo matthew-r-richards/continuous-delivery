@@ -93,3 +93,9 @@ echo "--- Creating jenkins jobs ---"
 sudo java -jar jenkins-cli.jar -s $JENKINS_URL create-job continuous-deployment < /jenkins-config/continuous-deployment-config.xml
 
 restart_jenkins
+
+# Add jenkins user to docker group
+sudo gpasswd -a jenkins docker
+sudo service docker restart
+
+restart_jenkins
