@@ -7,8 +7,10 @@ export default {
     addEntry: (name, description) => {
         dispatcher.dispatch({
             type: ActionTypes.ADD_ENTRY,
-            name: name,
-            description: description
+            data: {
+                name: name,
+                description: description
+            }
         });
         apiUtils.addEntry(name, description);
     }
