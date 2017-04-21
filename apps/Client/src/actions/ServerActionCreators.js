@@ -4,7 +4,7 @@ import { ActionTypes } from 'constants/ApiConstants';
 export default {
     // create the RECEIVE_ADD_ENTRY action
     receiveAddedEntry: data => {
-        dispatcher.handleServerAction({
+        dispatcher.dispatch({
             type: ActionTypes.RECEIVE_ADD_ENTRY,
             data: data
         });

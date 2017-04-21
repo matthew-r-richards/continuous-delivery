@@ -7,7 +7,7 @@ describe('ServerActionCreators', () => {
     let ServerActionCreators;
 
     // create a stub for the EntryDispatcher
-    const stubbedDispatcher = { handleServerAction: stub() };
+    const stubbedDispatcher = { dispatch: stub() };
 
     beforeEach(() => {
         const inject = require('inject-loader!actions/ServerActionCreators.js');
@@ -20,6 +20,6 @@ describe('ServerActionCreators', () => {
     it('dispatches an event', () => {
         const entry = { name: 'new name', description: 'new description' };
         ServerActionCreators.receiveAddedEntry(entry);
-        expect(stubbedDispatcher.handleServerAction.calledWith(ActionTypes.RECEIVE_ADD_ENTRY, entry));
+        expect(stubbedDispatcher.dispatch.calledWith(ActionTypes.RECEIVE_ADD_ENTRY, entry));
     });
 });

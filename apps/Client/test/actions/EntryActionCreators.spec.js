@@ -7,7 +7,7 @@ describe('EntryActionCreators', () => {
     let EntryActionCreators;
 
     // create a stub for the EntryDispatcher and ApiUtils
-    const stubbedDispatcher = { handleViewAction: stub() };
+    const stubbedDispatcher = { dispatch: stub() };
     const stubbedApi = { addEntry: stub() };
 
     beforeEach(() => {
@@ -21,6 +21,6 @@ describe('EntryActionCreators', () => {
 
     it('dispatches an event and initiates an API call', () => {
         EntryActionCreators.addEntry('new name', 'new description');
-        expect(stubbedDispatcher.handleViewAction.calledWith(ActionTypes.ADD_ENTRY, 'new name', 'new description'));
+        expect(stubbedDispatcher.dispatch.calledWith(ActionTypes.ADD_ENTRY, 'new name', 'new description'));
     });
 });

@@ -5,7 +5,7 @@ import apiUtils from 'utils/ApiUtils';
 export default {
     // create the ADD_ENTRY action and initiate the corresponding API call
     addEntry: (name, description) => {
-        dispatcher.handleViewAction({
+        dispatcher.dispatch({
             type: ActionTypes.ADD_ENTRY,
             name: name,
             description: description
