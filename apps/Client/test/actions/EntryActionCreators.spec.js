@@ -1,26 +1,22 @@
 import { expect } from 'chai';
 import { stub } from 'sinon';
 
+import reload from 'helpers/reload';
+
 import { ActionTypes } from 'constants/ApiConstants';
 
 describe('EntryActionCreators', () => {
+    let EntryDispatcher;
     let EntryActionCreators;
 
-    // create a stub for the EntryDispatcher and ApiUtils
-    const stubbedDispatcher = { dispatch: stub() };
-    const stubbedApi = { addEntry: stub() };
-
     beforeEach(() => {
-        const inject = require('inject-loader!actions/EntryActionCreators.js');
-        
-        EntryActionCreators = inject({
-            'dispatcher/EntryDispatcher': stubbedDispatcher,
-            'utils/ApiUtils': stubbedApi
-        }).default;
+        EntryDispatcher = reload('../../src/dispatcher/EntryDispatcher');
+        stub(EntryDispatcher, 'dispatch');
+        EntryActionCreators = reload('../../src/actions/EntryActionCreators');
     })
 
     it('dispatches an event and initiates an API call', () => {
         EntryActionCreators.addEntry('new name', 'new description');
-        expect(stubbedDispatcher.dispatch.calledWith(ActionTypes.ADD_ENTRY, 'new name', 'new description'));
+        expect(EntryDispatcher.dispatch.calledWith(ActionTypes.ADD_ENTRY, 'new name', 'new description'));
     });
 });

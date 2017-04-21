@@ -3,32 +3,38 @@ import { mount, shallow } from 'enzyme';
 import { expect } from 'chai';
 import { stub } from 'sinon';
 
+import reload from 'helpers/reload';
+
 import EntryInput from 'components/EntryInput';
 import EntryList from 'components/EntryList';
 
 describe('<EntriesContainer/>', () => {
   let EntriesContainer;
   let wrapper;
-
-  // create a stub for the EntryStore and EntryActionCreators
-  const stubbedStore = {
-    getAllEntries: stub(),
-    addChangeListener: stub(),
-    removeChangeListener: stub()
-  };
-  const stubbedActions = { addEntry: stub() };
+  let EntryStore;
+  let EntryActionCreators;
+  let addEntryStub;
+  let stubs;
 
   beforeEach(() => {
-    const inject = require('inject-loader!containers/EntriesContainer.jsx');
-    
-    EntriesContainer = inject({
-      'stores/EntryStore': stubbedStore,
-      'actions/EntryActionCreators': stubbedActions
-    }).default;
+    EntryStore = reload('../../src/stores/EntryStore');
+    EntryActionCreators = reload('../../src/actions/EntryActionCreators');
+
+    stubs = {
+      EntryStore: {
+        getAllEntries: stub(EntryStore, 'getAllEntries'),
+        addChangeListener: stub(EntryStore, 'addChangeListener'),
+        removeChangeListener: stub(EntryStore, 'removeChangeListener')
+      },
+      EntryActionCreators: {
+        addEntry: stub(EntryActionCreators, 'addEntry')
+      }
+    };
 
     // set the EntryStore stub to return a simple set of entries
-    stubbedStore.getAllEntries.returns(['entry 1', 'entry 2']);
+    stubs.EntryStore.getAllEntries.returns(['entry 1', 'entry 2']);
 
+    EntriesContainer = reload('../../src/containers/EntriesContainer');
     wrapper = shallow(<EntriesContainer/>);
   });
 
@@ -43,16 +49,16 @@ describe('<EntriesContainer/>', () => {
   });
 
   it('should fetch entries from the EntryStore on start', () => {
-    expect(stubbedStore.getAllEntries.called).to.eql(true);
+    expect(stubs.EntryStore.getAllEntries.called).to.equal(true);
 
     expect(wrapper.state().entries.length).to.equal(2);
     expect(wrapper.state().entries[0]).to.equal('entry 1');
     expect(wrapper.state().entries[1]).to.equal('entry 2');
   });
 
-  it('creates an action to add an entry', () => {
+ it('creates an action to add an entry', () => {
     wrapper.instance().addEntry('new name', 'new description');
-    expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.equal(true);
+    expect(stubs.EntryActionCreators.addEntry.calledWith('new name', 'new description')).to.equal(true);
   });
 
   it('passes addEntry to EntryInput', () => {
@@ -65,16 +71,16 @@ describe('<EntriesContainer/>', () => {
     const entryInput = wrapper.find(EntryInput);
     entryInput.prop('onSubmit')('new name', 'new description')
 
-    expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.equal(true);
+    expect(stubs.EntryActionCreators.addEntry.calledWith('new name', 'new description')).to.equal(true);
   })
 
   it('should update entries when notified of a change', () => {
     // set the EntryStore stub to return a changed (simple) set of entries
-    stubbedStore.getAllEntries.returns(['entry 1', 'entry 2', 'entry 3']);
+    stubs.EntryStore.getAllEntries.returns(['entry 1', 'entry 2', 'entry 3']);
 
     wrapper.instance().onChange();
 
-    expect(stubbedStore.getAllEntries.called).to.equal(true);
+    expect(stubs.EntryStore.getAllEntries.called).to.equal(true);
     expect(wrapper.state().entries.length).to.equal(3);
     expect(wrapper.state().entries[0]).to.equal('entry 1');
     expect(wrapper.state().entries[1]).to.equal('entry 2');
@@ -83,12 +89,12 @@ describe('<EntriesContainer/>', () => {
 
   it('should add a change listener on mounting', () => {
     wrapper = mount(<EntriesContainer/>);
-    expect(stubbedStore.addChangeListener.calledOnce).to.equal(true);
+    expect(stubs.EntryStore.addChangeListener.calledOnce).to.equal(true);
   });
 
   it('should remove the change listener on unmounting', () => {
     wrapper = mount(<EntriesContainer/>);
     wrapper.unmount();
-    expect(stubbedStore.removeChangeListener.calledOnce).to.equal(true);
+    expect(stubs.EntryStore.removeChangeListener.calledOnce).to.equal(true);
   });
 });
