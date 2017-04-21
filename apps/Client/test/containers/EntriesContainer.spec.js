@@ -33,8 +33,11 @@ describe('<EntriesContainer/>', () => {
   });
 
   it('should render EntryInput and EntryList components', () => {
+      expect(wrapper.containsAllMatchingElements([
+      <EntryInput/>
+    ])).to.equal(true);
+
     expect(wrapper.containsAllMatchingElements([
-      <EntryInput/>,
       <EntryList/>
     ])).to.equal(true);
   });
@@ -42,14 +45,14 @@ describe('<EntriesContainer/>', () => {
   it('should fetch entries from the EntryStore on start', () => {
     expect(stubbedStore.getAllEntries.called).to.eql(true);
 
-    expect(wrapper.state().entries.length).to.eql(2);
-    expect(wrapper.state().entries[0]).to.eql('entry 1');
-    expect(wrapper.state().entries[1]).to.eql('entry 2');
+    expect(wrapper.state().entries.length).to.equal(2);
+    expect(wrapper.state().entries[0]).to.equal('entry 1');
+    expect(wrapper.state().entries[1]).to.equal('entry 2');
   });
 
   it('creates an action to add an entry', () => {
     wrapper.instance().addEntry('new name', 'new description');
-    expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.eql(true);
+    expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.equal(true);
   });
 
   it('passes addEntry to EntryInput', () => {
@@ -62,7 +65,7 @@ describe('<EntriesContainer/>', () => {
     const entryInput = wrapper.find(EntryInput);
     entryInput.prop('onSubmit')('new name', 'new description')
 
-    expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.eql(true);
+    expect(stubbedActions.addEntry.calledWith('new name', 'new description')).to.equal(true);
   })
 
   it('should update entries when notified of a change', () => {
@@ -71,21 +74,21 @@ describe('<EntriesContainer/>', () => {
 
     wrapper.instance().onChange();
 
-    expect(stubbedStore.getAllEntries.called).to.eql(true);
-    expect(wrapper.state().entries.length).to.eql(3);
-    expect(wrapper.state().entries[0]).to.eql('entry 1');
-    expect(wrapper.state().entries[1]).to.eql('entry 2');
-    expect(wrapper.state().entries[2]).to.eql('entry 3');
+    expect(stubbedStore.getAllEntries.called).to.equal(true);
+    expect(wrapper.state().entries.length).to.equal(3);
+    expect(wrapper.state().entries[0]).to.equal('entry 1');
+    expect(wrapper.state().entries[1]).to.equal('entry 2');
+    expect(wrapper.state().entries[2]).to.equal('entry 3');
   });
 
   it('should add a change listener on mounting', () => {
     wrapper = mount(<EntriesContainer/>);
-    expect(stubbedStore.addChangeListener.calledOnce).to.eql(true);
+    expect(stubbedStore.addChangeListener.calledOnce).to.equal(true);
   });
 
   it('should remove the change listener on unmounting', () => {
     wrapper = mount(<EntriesContainer/>);
     wrapper.unmount();
-    expect(stubbedStore.removeChangeListener.calledOnce).to.eql(true);
+    expect(stubbedStore.removeChangeListener.calledOnce).to.equal(true);
   });
 });

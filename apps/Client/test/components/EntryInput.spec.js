@@ -4,6 +4,7 @@ import { expect } from 'chai';
 import { spy } from 'sinon';
 
 import EntryInput from 'components/EntryInput';
+import { FormControl, Button } from 'react-bootstrap';
 
 describe('<EntryInput/>', () => {
   let wrapper;
@@ -12,7 +13,17 @@ describe('<EntryInput/>', () => {
   });
 
   it('should render inputs for name and description and a Start button', () => {
-    // can't get this to work reliably
+    expect(wrapper.containsAllMatchingElements([
+      <FormControl id="nameInput"/>
+    ])).to.equal(true);
+
+    expect(wrapper.containsAllMatchingElements([
+      <FormControl id="descInput"/>
+    ])).to.equal(true);
+
+    expect(wrapper.containsAllMatchingElements([
+      <Button bsStyle="success">Start</Button>
+    ])).to.equal(true);
   });
 
   it('should accept input for name', () => {
