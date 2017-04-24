@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import { Panel } from 'react-bootstrap';
 
 export default class EntryList extends Component {
     render() {
-        return (<div/>)
+        return (
+            <Panel>
+                some list
+            </Panel>
+        )
     }
 }
