@@ -97,4 +97,12 @@ describe('<EntriesContainer/>', () => {
     wrapper.unmount();
     expect(stubs.EntryStore.removeChangeListener.calledOnce).to.be.true;
   });
+
+  it('should pass entries to EntryList for rendering', () => {
+    expect(wrapper.find(EntryList).prop('entries')).to.exist;
+    const entries = wrapper.find(EntryList).prop('entries');
+    expect(entries.length).to.equal(2);
+    expect(entries[0]).to.equal('entry 1');
+    expect(entries[1]).to.equal('entry 2');
+  });
 });
