@@ -1,6 +1,6 @@
 const keyMirror = require('keymirror');
 
-const APIRoot = "http://localhost:3000";
+const APIRoot = "";
 
 export const APIEndpoints = {
     ENTRIES: APIRoot + "/api/entries"
