@@ -10,9 +10,12 @@ import EntryStore from 'stores/EntryStore';
 export default class EntriesContainer extends Component {
     constructor(props) {
         super(props);
+        
+        // the list of entries will be empty until the store has been populated
         this.state = {
-            entries: EntryStore.getAllEntries()
+            entries: []
         };
+
         this.addEntry = this.addEntry.bind(this);
         this.onChange = this.onChange.bind(this);
     }
@@ -20,6 +23,9 @@ export default class EntriesContainer extends Component {
     componentDidMount() {
         // listen for changes in the store
         EntryStore.addChangeListener(this.onChange);
+
+        // create the action to load the initial data
+        EntryActionCreators.getAllEntries();
     }
 
     componentWillUnmount() {
