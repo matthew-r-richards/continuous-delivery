@@ -29,5 +29,9 @@ describe('<EntryList/>', () => {
 
         wrapper = shallow(<EntryList entries={entries}/>);
         expect(wrapper.find(Entry)).to.have.length(2);
+
+        // check that the entry details are passed through to the Entry component
+        expect(wrapper.find(Entry).at(0).prop('data')).to.eql(entries[0]);
+        expect(wrapper.find(Entry).at(1).prop('data')).to.eql(entries[1]);
     });
 });
