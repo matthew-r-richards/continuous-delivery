@@ -2,6 +2,8 @@ import serverActionCreators from 'actions/ServerActionCreators';
 import { APIEndpoints } from 'constants/ApiConstants';
 import TimesheetEntry from 'models/TimesheetEntry';
 
+import 
+
 export default {
     getAllEntries: () => {
         const endpoint = APIEndpoints.ENTRIES;
@@ -25,7 +27,7 @@ export default {
             new TimesheetEntry('Entry 2', 'Description 2', startTime2, endTime2),
             new TimesheetEntry('Entry 3', 'Description 3', startTime3, null)
         ]
-        serverActionCreators.receiveAllEntries(fakeEntries);
+        serverActionCreators.receiveEntries(fakeEntries);
     },
 
     addEntry: (name, description) => {
