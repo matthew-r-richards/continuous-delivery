@@ -41,15 +41,15 @@ describe('<EntriesContainer/>', () => {
   it('should render EntryInput and EntryList components', () => {
       expect(wrapper.containsAllMatchingElements([
       <EntryInput/>
-    ])).to.equal(true);
+    ])).to.be.true;
 
     expect(wrapper.containsAllMatchingElements([
       <EntryList/>
-    ])).to.equal(true);
+    ])).to.be.true;
   });
 
   it('should fetch entries from the EntryStore on start', () => {
-    expect(stubs.EntryStore.getAllEntries.called).to.equal(true);
+    expect(stubs.EntryStore.getAllEntries.called).to.be.true;
 
     expect(wrapper.state().entries.length).to.equal(2);
     expect(wrapper.state().entries[0]).to.equal('entry 1');
@@ -58,7 +58,7 @@ describe('<EntriesContainer/>', () => {
 
  it('creates an action to add an entry', () => {
     wrapper.instance().addEntry('new name', 'new description');
-    expect(stubs.EntryActionCreators.addEntry.calledWith('new name', 'new description')).to.equal(true);
+    expect(stubs.EntryActionCreators.addEntry.calledWith('new name', 'new description')).to.be.true;
   });
 
   it('passes addEntry to EntryInput', () => {
@@ -71,7 +71,7 @@ describe('<EntriesContainer/>', () => {
     const entryInput = wrapper.find(EntryInput);
     entryInput.prop('onSubmit')('new name', 'new description')
 
-    expect(stubs.EntryActionCreators.addEntry.calledWith('new name', 'new description')).to.equal(true);
+    expect(stubs.EntryActionCreators.addEntry.calledWith('new name', 'new description')).to.be.true;
   })
 
   it('should update entries when notified of a change', () => {
@@ -80,7 +80,7 @@ describe('<EntriesContainer/>', () => {
 
     wrapper.instance().onChange();
 
-    expect(stubs.EntryStore.getAllEntries.called).to.equal(true);
+    expect(stubs.EntryStore.getAllEntries.called).to.be.true;
     expect(wrapper.state().entries.length).to.equal(3);
     expect(wrapper.state().entries[0]).to.equal('entry 1');
     expect(wrapper.state().entries[1]).to.equal('entry 2');
@@ -89,12 +89,12 @@ describe('<EntriesContainer/>', () => {
 
   it('should add a change listener on mounting', () => {
     wrapper = mount(<EntriesContainer/>);
-    expect(stubs.EntryStore.addChangeListener.calledOnce).to.equal(true);
+    expect(stubs.EntryStore.addChangeListener.calledOnce).to.be.true;
   });
 
   it('should remove the change listener on unmounting', () => {
     wrapper = mount(<EntriesContainer/>);
     wrapper.unmount();
-    expect(stubs.EntryStore.removeChangeListener.calledOnce).to.equal(true);
+    expect(stubs.EntryStore.removeChangeListener.calledOnce).to.be.true;
   });
 });

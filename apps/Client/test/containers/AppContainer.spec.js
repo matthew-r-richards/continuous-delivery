@@ -16,6 +16,6 @@ describe('<App/>', () => {
     expect(wrapper.containsAllMatchingElements([
       <Header/>,
       <EntriesContainer/>
-    ])).to.equal(true);
+    ])).to.be.true;
   });
 });

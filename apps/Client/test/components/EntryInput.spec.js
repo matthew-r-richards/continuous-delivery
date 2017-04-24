@@ -15,15 +15,15 @@ describe('<EntryInput/>', () => {
   it('should render inputs for name and description and a Start button', () => {
     expect(wrapper.containsAllMatchingElements([
       <FormControl id="nameInput"/>
-    ])).to.equal(true);
+    ])).to.be.true;
 
     expect(wrapper.containsAllMatchingElements([
       <FormControl id="descInput"/>
-    ])).to.equal(true);
+    ])).to.be.true;
 
     expect(wrapper.containsAllMatchingElements([
       <Button bsStyle="success">Start</Button>
-    ])).to.equal(true);
+    ])).to.be.true;
   });
 
   it('should accept input for name', () => {
@@ -50,7 +50,7 @@ describe('<EntryInput/>', () => {
 
       startButton.simulate('click');
 
-      expect(addEntrySpy.calledOnce).to.equal(true);
+      expect(addEntrySpy.calledOnce).to.be.true;
       expect(addEntrySpy.calledWith('new name', 'new description'));
   })
 });
