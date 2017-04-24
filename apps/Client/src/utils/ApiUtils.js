@@ -2,12 +2,12 @@ import serverActionCreators from 'actions/ServerActionCreators';
 import { APIEndpoints } from 'constants/ApiConstants';
 import TimesheetEntry from 'models/TimesheetEntry';
 
-import 
+import Requesr from 'superagent';
 
 export default {
     getAllEntries: () => {
         const endpoint = APIEndpoints.ENTRIES;
-        console.log(`API Endpoint: ${endpoint}`);
+        console.log(`API Endpoint: GET ${endpoint}`);
 
         // just return some fake data for now
         const startTime1 = new Date();
@@ -32,7 +32,7 @@ export default {
 
     addEntry: (name, description) => {
         const endpoint = APIEndpoints.ENTRIES;
-        console.log(`API Endpoint: ${endpoint}, Name: ${name}, Description: ${description}`);
+        console.log(`API Endpoint: POST ${endpoint}, Name: ${name}, Description: ${description}`);
         serverActionCreators.receiveAddedEntry(new TimesheetEntry(name, description, new Date(), null));
     }
 }

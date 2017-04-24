@@ -47,7 +47,7 @@ entryStore.dispatchToken = EntryDispatcher.register(action => {
             entryStore.addEntry(action.data);
             break;
         
-        case ActionTypes.RECEIVE_ALL_ENTRIES:
+        case ActionTypes.RECEIVE_ENTRIES:
             entryStore.refreshEntries(action.data);
             break;
 

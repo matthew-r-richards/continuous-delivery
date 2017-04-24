@@ -66,7 +66,7 @@ describe('EntryStore', () => {
             { name: 'name 2', description: 'description 2' }
         ]
         const action = {
-            type: ActionTypes.RECEIVE_ALL_ENTRIES,
+            type: ActionTypes.RECEIVE_ENTRIES,
             data: expectedEntries
         }
 
