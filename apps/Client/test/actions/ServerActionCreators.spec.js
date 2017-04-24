@@ -18,6 +18,11 @@ describe('ServerActionCreators', () => {
     it('dispatches an event', () => {
         const entry = { name: 'new name', description: 'new description' };
         ServerActionCreators.receiveAddedEntry(entry);
-        expect(EntryDispatcher.dispatch.calledWith(ActionTypes.RECEIVE_ADD_ENTRY, entry));
+        const expectedAction = {
+            type: ActionTypes.RECEIVE_ADD_ENTRY,
+            data: entry
+        };
+
+        expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
     });
 });
