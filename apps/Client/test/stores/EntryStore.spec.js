@@ -39,7 +39,7 @@ describe('EntryStore', () => {
 
     it('should add an entry to the store', () => {
         // trigger the dispatcher callback
-        var action = {
+        const action = {
             type: ActionTypes.RECEIVE_ADD_ENTRY,
             data: {
                 name: 'new name',
@@ -54,6 +54,27 @@ describe('EntryStore', () => {
         expect(entries.length).to.equal(1);
         expect(entries[0].name).to.equal('new name');
         expect(entries[0].description).to.equal('new description');
+
+        // check the change event was emitted
+        expect(EntryStore.emitChange.calledOnce).to.be.true;
+    });
+
+    it('should load entries into the store', () => {
+        // trigger the dispatcher callback
+        const expectedEntries = [
+            { name: 'name 1', description: 'description 1' },
+            { name: 'name 2', description: 'description 2' }
+        ]
+        const action = {
+            type: ActionTypes.RECEIVE_ALL_ENTRIES,
+            data: expectedEntries
+        }
+
+        dispatcherCallback(action);
+
+        // check the Store contents
+        const actualEntries = EntryStore.getAllEntries();
+        expect(actualEntries).to.eql(expectedEntries);
 
         // check the change event was emitted
         expect(EntryStore.emitChange.calledOnce).to.be.true;

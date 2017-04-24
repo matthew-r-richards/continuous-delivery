@@ -26,6 +26,11 @@ class EntryStore extends EventEmitter {
         return this.entries;
     }
 
+    refreshEntries(data) {
+        this.entries = data;
+        this.emitChange();
+    }
+
     addEntry(data) {
         this.entries.push(data);
         this.emitChange();
@@ -40,6 +45,10 @@ entryStore.dispatchToken = EntryDispatcher.register(action => {
     switch (action.type) {
         case ActionTypes.RECEIVE_ADD_ENTRY:
             entryStore.addEntry(action.data);
+            break;
+        
+        case ActionTypes.RECEIVE_ALL_ENTRIES:
+            entryStore.refreshEntries(action.data);
             break;
 
         return true;
