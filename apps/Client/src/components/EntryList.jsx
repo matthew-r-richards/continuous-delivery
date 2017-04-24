@@ -12,6 +12,7 @@ export default class EntryList extends Component {
         } else {
             content = 'No timesheet entries defined...';
         }
+        
         return this.props.entries ?
             (<Panel>
                 {content}
