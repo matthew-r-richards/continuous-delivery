@@ -8,5 +8,6 @@ export const APIEndpoints = {
 
 export const ActionTypes = keyMirror({
     ADD_ENTRY: null,
-    RECEIVE_ADD_ENTRY: null
+    RECEIVE_ADD_ENTRY: null,
+    RECEIVE_ALL_ENTRIES: null
 });

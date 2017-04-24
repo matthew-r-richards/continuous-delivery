@@ -2,7 +2,13 @@ import dispatcher from 'dispatcher/EntryDispatcher';
 import { ActionTypes } from 'constants/ApiConstants';
 
 export default {
-    // create the RECEIVE_ADD_ENTRY action
+    receiveAllEntries: data => {
+        dispatcher.dispatch({
+            type: ActionTypes.RECEIVE_ALL_ENTRIES,
+            data: data
+        });
+    },
+
     receiveAddedEntry: data => {
         dispatcher.dispatch({
             type: ActionTypes.RECEIVE_ADD_ENTRY,

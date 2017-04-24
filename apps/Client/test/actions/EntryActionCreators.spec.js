@@ -15,10 +15,11 @@ describe('EntryActionCreators', () => {
         stub(EntryDispatcher, 'dispatch');
         ApiUtils = reload('../../src/utils/ApiUtils');
         stub(ApiUtils, 'addEntry');
+        stub(ApiUtils, 'getAllEntries');
         EntryActionCreators = reload('../../src/actions/EntryActionCreators');
     })
 
-    it('dispatches an event and initiates an API call', () => {
+    it('dispatches an event and initiates an API call to add an Entry', () => {
         EntryActionCreators.addEntry('new name', 'new description');
         const expectedAction = {
             type: ActionTypes.ADD_ENTRY,
@@ -30,5 +31,15 @@ describe('EntryActionCreators', () => {
         
         expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
         expect(ApiUtils.addEntry.calledWith('new name', 'new description')).to.be.true;
+    });
+
+    it('dispatches an event and initiates an API call to get all Entries', () => {
+        EntryActionCreators.getAllEntries();
+        const expectedAction = {
+            type: ActionTypes.GET_ALL_ENTRIES
+        };
+
+        expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
+        expect(ApiUtils.getAllEntries.calledOnce).to.be.true;
     });
 });

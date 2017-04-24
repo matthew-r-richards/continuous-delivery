@@ -3,7 +3,13 @@ import { ActionTypes } from 'constants/ApiConstants';
 import apiUtils from 'utils/ApiUtils';
 
 export default {
-    // create the ADD_ENTRY action and initiate the corresponding API call
+    getAllEntries: () => {
+        dispatcher.dispatch({
+            type: ActionTypes.GET_ALL_ENTRIES
+        });
+        apiUtils.getAllEntries();
+    },
+
     addEntry: (name, description) => {
         dispatcher.dispatch({
             type: ActionTypes.ADD_ENTRY,
