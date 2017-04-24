@@ -2,9 +2,9 @@ import dispatcher from 'dispatcher/EntryDispatcher';
 import { ActionTypes } from 'constants/ApiConstants';
 
 export default {
-    receiveAllEntries: data => {
+    receiveEntries: data => {
         dispatcher.dispatch({
-            type: ActionTypes.RECEIVE_ALL_ENTRIES,
+            type: ActionTypes.RECEIVE_ENTRIES,
             data: data
         });
     },

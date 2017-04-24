@@ -25,7 +25,7 @@ export default class EntriesContainer extends Component {
         EntryStore.addChangeListener(this.onChange);
 
         // create the action to load the initial data
-        EntryActionCreators.getAllEntries();
+        EntryActionCreators.loadEntries();
     }
 
     componentWillUnmount() {

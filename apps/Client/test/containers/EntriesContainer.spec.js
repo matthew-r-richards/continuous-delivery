@@ -27,7 +27,7 @@ describe('<EntriesContainer/>', () => {
         removeChangeListener: stub(EntryStore, 'removeChangeListener')
       },
       EntryActionCreators: {
-        getAllEntries: stub(EntryActionCreators, 'getAllEntries'),
+        loadEntries: stub(EntryActionCreators, 'loadEntries'),
         addEntry: stub(EntryActionCreators, 'addEntry')
       }
     };
@@ -49,9 +49,9 @@ describe('<EntriesContainer/>', () => {
     ])).to.be.true;
   });
 
-  it('should dispatch an action to get all entries on mounting', () => {
+  it('should dispatch an action to load all entries on mounting', () => {
     wrapper = mount(<EntriesContainer/>);
-    expect(stubs.EntryActionCreators.getAllEntries.called).to.be.true;
+    expect(stubs.EntryActionCreators.loadEntries.called).to.be.true;
   });
 
  it('creates an action to add an entry', () => {
@@ -99,7 +99,7 @@ describe('<EntriesContainer/>', () => {
   it('should pass entries to EntryList for rendering', () => {
     // call onChange so that the EntryList has an up-to-date list of Entries
     wrapper.instance().onChange();
-    
+
     expect(wrapper.find(EntryList).prop('entries')).to.exist;
     const entries = wrapper.find(EntryList).prop('entries');
     expect(entries.length).to.equal(2);

@@ -3,9 +3,9 @@ import { ActionTypes } from 'constants/ApiConstants';
 import apiUtils from 'utils/ApiUtils';
 
 export default {
-    getAllEntries: () => {
+    loadEntries: () => {
         dispatcher.dispatch({
-            type: ActionTypes.GET_ALL_ENTRIES
+            type: ActionTypes.LOAD_ENTRIES
         });
         apiUtils.getAllEntries();
     },

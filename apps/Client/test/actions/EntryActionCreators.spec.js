@@ -34,9 +34,9 @@ describe('EntryActionCreators', () => {
     });
 
     it('dispatches an event and initiates an API call to get all Entries', () => {
-        EntryActionCreators.getAllEntries();
+        EntryActionCreators.loadEntries();
         const expectedAction = {
-            type: ActionTypes.GET_ALL_ENTRIES
+            type: ActionTypes.LOAD_ENTRIES
         };
 
         expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;

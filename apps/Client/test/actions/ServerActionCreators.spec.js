@@ -31,9 +31,9 @@ describe('ServerActionCreators', () => {
             { name: 'new name 1', description: 'new description 1' },
             { name: 'new name 2', description: 'new description 2' }
         ];
-        ServerActionCreators.receiveAllEntries(entries);
+        ServerActionCreators.receiveEntries(entries);
         const expectedAction = {
-            type: ActionTypes.RECEIVE_ALL_ENTRIES,
+            type: ActionTypes.RECEIVE_ENTRIES,
             data: entries
         };
 
