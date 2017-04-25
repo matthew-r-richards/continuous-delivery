@@ -7,6 +7,7 @@ export default class Entry extends Component {
         const entry = this.props.data;
         const formattedStartTime = moment(entry.start).format('h:m A');
         const formattedEndTime = entry.end ? moment(entry.end).format('h:m A') : 'In progress...';
+        const displayStop = !entry.end;
 
         return (
             <Grid>
@@ -17,7 +18,7 @@ export default class Entry extends Component {
                     <Col md={2} className="entry-details">{formattedEndTime}</Col>
                     <Col md={2} mdPush={2}>
                         <ButtonToolbar>
-                            <Button bsStyle="info" bsSize="small"><Glyphicon glyph="stop" /></Button>
+                            { displayStop && <Button bsSize="small"><Glyphicon glyph="stop" /></Button> }
                             <Button bsStyle="danger" bsSize="small"><Glyphicon glyph="remove" /></Button>
                         </ButtonToolbar>
                     </Col>

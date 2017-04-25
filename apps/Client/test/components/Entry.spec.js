@@ -40,12 +40,29 @@ describe('<Entry/>', () => {
       ])).to.be.true;
   });
 
-  it('should render stop and delete buttons', () => {
+  it('should render a delete button', () => {
     expect(wrapper.containsAllMatchingElements(
       [
-        <Button><Glyphicon glyph="stop" /></Button>,
-        <Button><Glyphicon glyph="delete" /></Button>
+         <Button bsStyle="danger"><Glyphicon glyph="remove" /></Button>
       ]
-    ))
+    )).to.be.true;
+  });
+
+  it('should only render the stop button if the entry does not have an end time', () => {
+    // case where an end time is defined
+        expect(wrapper.containsAllMatchingElements(
+      [
+        <Button><Glyphicon glyph="stop" /></Button>
+      ]
+    )).to.be.false;
+
+    // no end time
+    const entry = new TimesheetEntry('new name', 'new description', amTime, null);
+    wrapper = shallow(<Entry data={entry}/>);
+    expect(wrapper.containsAllMatchingElements(
+      [
+        <Button><Glyphicon glyph="stop" /></Button>
+      ]
+    )).to.be.true;
   })
 });
