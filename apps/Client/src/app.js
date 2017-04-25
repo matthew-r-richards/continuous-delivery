@@ -1,8 +1,14 @@
 const express = require('express');
 const path = require('path');
 const app = express();
+const request = require('request');
+const bodyParser = require('body-parser');
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 const PORT = 3000;
+
+const API_URL = 'http://localhost:5000/api';
 
 // if we're running in development, use the webpack middleware to serve up the JS
 if (process.env.NODE_ENV == 'development') {
@@ -33,28 +39,38 @@ app.get("/", (req,res) => {
 });
 
 // GET api/entries
-app.get("/api/entries", (req,res) => {
-    // just return some fake data for now
-    const startTime1 = new Date();
-    startTime1.setHours(9);
-    startTime1.setMinutes(0);
-    const endTime1 = new Date();
-    endTime1.setHours(11);
-    endTime1.setMinutes(30);
-    const startTime2 = endTime1;
-    const endTime2 = new Date();
-    endTime2.setHours(13);
-    endTime2.setMinutes(10);
-    const startTime3 = endTime2;
+app.get("/api/entries", (req, res) => {
+    const options = {
+        url: API_URL + '/entries',
+        json: true
+    }
 
-    const fakeEntries = [
-        { name: 'Entry 1', description: 'Description 1', start: startTime1, end: endTime1 },
-        { name: 'Entry 2', description: 'Description 2', start: startTime2, end: endTime2 },
-        { name: 'Entry 3', description: 'Description 3', start: startTime3, end: null }
-    ];
-
-    res.json(fakeEntries);
+    request(options, (error, response, body) => {
+        if (!error && response.statusCode == 200) {
+            res.send(body);
+        }
+    });
 });
+
+// POST api/entries
+app.post("/api/entries", (req, res) => {
+    const name = req.body.taskName;
+    const description = req.body.taskDescription;
+    const jsonBody = { "taskName": name, "taskDescription": description };
+
+    const options = {
+        url: API_URL + '/entries',
+        method: 'POST',
+        json: true,
+        body: jsonBody
+    }
+
+    request(options, (error, response, body) => {
+        if (!error && response.statusCode == 201) {
+            res.send(body);
+        }
+    });
+})
 
 app.listen(PORT, () => {
   console.log('Listening at Port ' + PORT + '...');
