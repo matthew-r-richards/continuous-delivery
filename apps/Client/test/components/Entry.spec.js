@@ -4,7 +4,6 @@ import { expect } from 'chai';
 import { Col, Button, Glyphicon } from 'react-bootstrap';
 
 import Entry from 'components/Entry';
-import TimesheetEntry from 'models/TimesheetEntry';
 
 describe('<Entry/>', () => {
   let wrapper;
@@ -16,7 +15,7 @@ describe('<Entry/>', () => {
   pmTime.setMinutes(59);
 
   beforeEach(() => {
-    const entry = new TimesheetEntry('new name', 'new description', amTime, pmTime);
+    const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
     wrapper = shallow(<Entry data={entry}/>);
   });
 
@@ -31,7 +30,7 @@ describe('<Entry/>', () => {
   });
 
   it('should display in progress when end date is not defined', () => {
-    const entry = new TimesheetEntry('new name', 'new description', amTime, null);
+    const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
     wrapper = shallow(<Entry data={entry}/>);
     expect(wrapper.containsAllMatchingElements(
       [
@@ -57,7 +56,7 @@ describe('<Entry/>', () => {
     )).to.be.false;
 
     // no end time
-    const entry = new TimesheetEntry('new name', 'new description', amTime, null);
+    const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
     wrapper = shallow(<Entry data={entry}/>);
     expect(wrapper.containsAllMatchingElements(
       [
