@@ -47,7 +47,7 @@ app.get("/api/entries", (req, res) => {
 
     request(options, (error, response, body) => {
         if (error) {
-            console.log(`Error in making API call to ${options.url}: ${error}`);
+            console.log(`Error in making API call to GET ${options.url}: ${error}`);
             res.status(500).send('Error in making API call');
         } else if (response.statusCode == 200) {
             res.send(body);
@@ -78,7 +78,7 @@ app.post("/api/entries", (req, res) => {
 
     request(options, (error, response, body) => {
         if (error) {
-            console.log(`Error in making API call to ${options.url}: ${error}`);
+            console.log(`Error in making API call to POST ${options.url}: ${error}`);
             res.status(500).send('Error in making API call');
         } else if (response.statusCode == 201) {
             res.status(201).send(body);

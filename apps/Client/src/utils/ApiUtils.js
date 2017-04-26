@@ -6,7 +6,6 @@ import Request from 'superagent';
 export default {
     getAllEntries: () => {
         const endpoint = APIEndpoints.ENTRIES;
-        console.log(`API Endpoint: GET ${endpoint}`);
 
         Request
             .get(endpoint)
@@ -19,7 +18,6 @@ export default {
 
     addEntry: (name, description) => {
         const endpoint = APIEndpoints.ENTRIES;
-        console.log(`API Endpoint: POST ${endpoint}, taskName: ${name}, taskDescription: ${description}`);
 
         Request
             .post(endpoint)
