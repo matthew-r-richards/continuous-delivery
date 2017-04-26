@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const API_URL = 'http://localhost:5000/api';
 
