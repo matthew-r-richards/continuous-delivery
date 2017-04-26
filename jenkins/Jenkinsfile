@@ -8,4 +8,12 @@ node {
     stage("Build and Test and Client App") {
         sh 'cd apps/Client; docker run --rm -v $(pwd):/src --workdir /src node sh ./build.sh;'
     }
+    publishHTML (target: [
+        allowMissing: false,
+        alwaysLinkToLastBuild: false,
+        keepAll: true,
+        reportDir: 'apps/Client/coverage/lcov-report',
+        reportFiles: 'index.html',
+        reportName: "Client App Coverage Report"
+    ])
 }

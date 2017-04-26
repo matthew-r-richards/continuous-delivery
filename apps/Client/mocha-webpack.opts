@@ -1,5 +1,0 @@
---colors
---webpack-config webpack.test.config.js
---require babel-core/register
---require ./test/helpers/browser.js
-test/**/*.spec.js
