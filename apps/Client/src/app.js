@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 const PORT = process.env.PORT || 3000;
 
 const API_URL = process.env.EXTERNAL_API || 'http://localhost:5000/api';
-console.log(API_URL);
 
 // if we're running in development, use the webpack middleware to serve up the JS
 if (process.env.NODE_ENV == 'development') {
