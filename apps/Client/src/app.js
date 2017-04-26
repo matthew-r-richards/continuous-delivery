@@ -64,7 +64,7 @@ app.post("/api/entries", (req, res) => {
 
     if (!name || name == '') {
         res.status(400).send('A value must be supplied for taskName');
-        next();
+        return;
     }
 
     const jsonBody = { "taskName": name, "taskDescription": description };

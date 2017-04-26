@@ -83,6 +83,14 @@ describe('Client App', () => {
                 .expect(JSON.stringify(mockData), done);
         });
 
+        it('should return 400 status if taskName value is not supplied', done => {
+            testApp
+                .post('/api/entries')
+                .send({ taskDescription: 'new description' })
+                .expect(400)
+                .expect('A value must be supplied for taskName', done); 
+        });
+
         it('should return 500 status if an error is encountered', done => {
             // set up the mocked API to return an error when attempting to call it
             nock(API_URL)
