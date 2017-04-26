@@ -6,7 +6,7 @@ export default class Entry extends Component {
     render() {
         const entry = this.props.data;
         const formattedStartTime = moment(entry.taskStart).format('h:m A');
-        const formattedEndTime = entry.taskEnd ? moment(entry.taskEnd).format('h:m A') : 'In progress...';
+        const formattedEndTime = entry.taskEnd ? moment(entry.taskEnd).format('h:mm A') : 'In progress...';
         const displayStop = !entry.taskEnd;
 
         return (
