@@ -1,0 +1,18 @@
+version: '3'
+services:
+  client-app:
+    container_name: server-app
+    build:
+      context: ./Server
+      dockerfile: Dockerfile-deploy
+    image: server-app
+    ports:
+      - 80
+  server-app:
+    container_name: client-app
+    build:
+      context: ./Client
+      dockerfile: Dockerfile-deploy
+    image: client-app
+    ports:
+      - 80
