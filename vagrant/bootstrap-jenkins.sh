@@ -72,6 +72,7 @@ sudo wget -q ${JENKINS_URL}jnlpJars/jenkins-cli.jar
 echo "--- Installing jenkins plugins ---"
 install_plugin "git"
 install_plugin "workflow-aggregator"
+install_plugin "htmlpublisher"
 
 changed=1
 

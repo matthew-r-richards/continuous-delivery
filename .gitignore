@@ -12,3 +12,4 @@ npm-debug.log
 apps/Client/src/dist
 apps/Client/dist
 apps/Client/.tmp
+apps/Client/coverage
