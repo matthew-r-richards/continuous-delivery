@@ -1,13 +1,13 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
+import request from 'request';
+import bodyParser from 'body-parser';
+
 const app = express();
-const request = require('request');
-const bodyParser = require('body-parser');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 const PORT = 3000;
-
 const API_URL = 'http://localhost:5000/api';
 
 // if we're running in development, use the webpack middleware to serve up the JS
@@ -46,8 +46,13 @@ app.get("/api/entries", (req, res) => {
     }
 
     request(options, (error, response, body) => {
-        if (!error && response.statusCode == 200) {
+        if (error) {
+            console.log(error);
+            res.status(500).send('API  not available');
+        } else if (response.statusCode == 200) {
             res.send(body);
+        } else {
+            res.status(500).send('Unexpected response from API');
         }
     });
 });
@@ -56,6 +61,14 @@ app.get("/api/entries", (req, res) => {
 app.post("/api/entries", (req, res) => {
     const name = req.body.taskName;
     const description = req.body.taskDescription;
+
+    console.log(name);
+
+    if (!name || name === '') {
+        res.status(400).send('A value must be supplied for taskName');
+        next();
+    }
+
     const jsonBody = { "taskName": name, "taskDescription": description };
 
     const options = {
@@ -66,8 +79,13 @@ app.post("/api/entries", (req, res) => {
     }
 
     request(options, (error, response, body) => {
-        if (!error && response.statusCode == 201) {
+        if (error) {
+            console.log(error);
+            res.status(500).send('API  not available');
+        } else if (response.statusCode == 201) {
             res.send(body);
+        } else {
+            res.status(500).send('Unexpected response from API');
         }
     });
 })
@@ -75,3 +93,5 @@ app.post("/api/entries", (req, res) => {
 app.listen(PORT, () => {
   console.log('Listening at Port ' + PORT + '...');
 });
+
+export default app;
