@@ -14,7 +14,8 @@ module.exports = webpackMerge(commonConfig, {
   plugins: [
     new ExtractTextPlugin('bundle.[hash].css'),
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
     new HtmlWebpackPlugin({
       // automatically adds JS, CSS etc. tags to this html file
       template: 'src/index.html'
