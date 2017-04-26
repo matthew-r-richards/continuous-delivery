@@ -6,15 +6,6 @@ import app from 'app';
 const testApp = request(app);
 
 describe('Client App', () => {
-    describe('GET /', () => {
-        it('should return index page and a 200 status', done => {
-            testApp
-                .get('/')
-                .expect(200)
-                .expect(/Timesheet Entry/, done)
-        });
-    });
-
     describe('GET /api/entries', () => {
         const API_URL = 'http://localhost:5000/api';
 

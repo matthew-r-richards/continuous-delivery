@@ -62,8 +62,6 @@ app.post("/api/entries", (req, res) => {
     const name = req.body.taskName;
     const description = req.body.taskDescription;
 
-    console.log(name);
-
     if (!name || name == '') {
         res.status(400).send('A value must be supplied for taskName');
         next();
