@@ -1,6 +1,6 @@
 version: '3'
 services:
-  client-app:
+  server-app:
     container_name: server-app
     build:
       context: ./Server
@@ -8,7 +8,7 @@ services:
     image: server-app
     ports:
       - 80
-  server-app:
+  client-app:
     container_name: client-app
     build:
       context: ./Client

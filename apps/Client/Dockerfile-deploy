@@ -4,6 +4,7 @@ COPY . /usr/src/client-app
 WORKDIR /usr/src/client-app
 
 ENV PORT=80
+ENV EXTERNAL_API=http://server-app/api
 
 EXPOSE 80
 
