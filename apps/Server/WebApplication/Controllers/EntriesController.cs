@@ -94,5 +94,26 @@ namespace WebApplication.Controllers
 			this.repository.Delete(id);
 			return NoContent();
 		}
+
+		/// <summary>
+		/// Stop the specified Timesheet Entry (i.e. set the end time).
+		/// </summary>
+		/// <returns>No content.</returns>
+		/// <param name="id">The ID of the Timesheet Entry to stop.</param>
+		/// <response code="200">Entry stopped</response>
+		/// <response code="404">Entry not found</response>
+		[HttpDelete("{id}")]
+		[ProducesResponseType(typeof(TimesheetEntry), 200)]
+		[ProducesResponseType(typeof(void), 404)]
+		public IActionResult Stop(long id)
+		{
+			var entry = this.repository.Find(id);
+			if (entry == null)
+			{
+				return NotFound();
+			}
+
+			return new ObjectResult(this.repository.Stop(id));
+		}
 	}
 }

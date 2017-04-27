@@ -206,6 +206,59 @@ namespace Repositories
 			}
 		}
 
+		public class Stop
+		{
+			[Fact]
+			public void Updates_Entry_End_Time_If_Entry_Exists()
+			{
+				var options = BuildContextOptions(nameof(Updates_Entry_End_Time_If_Entry_Exists));
+
+				long idToStop;
+
+				// Set up the test against one instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					context.Database.EnsureDeleted();
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 1", TaskDescription = "Task 1 Description" });
+					context.TimesheetEntries.Add(new TimesheetEntry { TaskName = "Task 2", TaskDescription = "Task 2 Description" });
+					context.SaveChanges();
+
+					// Find out the ID of the first entry so that we can stop it
+					idToStop = context.TimesheetEntries.ToList().First().Id;
+
+					// make sure the end time is not already set
+					Assert.Null(context.TimesheetEntries.ToList().First().TaskEnd);
+				}
+
+				// Run the test against another instance of the context
+				using (var context = new TimesheetContext(options))
+				{
+					var repository = new TimesheetRepository(context);
+					repository.Stop(idToStop);
+				}
+
+				// Use a separate instance of the context to verify that the end time was updated
+				using (var context = new TimesheetContext(options))
+				{
+					Assert.True(AreDatesApproximatelyEqual((DateTime)context.TimesheetEntries.First().TaskEnd, DateTime.Now, 2));
+				}
+			}
+
+			[Fact]
+			public void Throws_InvalidOperationException_If_Entry_Does_Not_Exist()
+			{
+				var options = BuildContextOptions(nameof(Throws_InvalidOperationException_If_Entry_Does_Not_Exist));
+
+				// Run the test with an empty db in the context
+				using (var context = new TimesheetContext(options))
+				{
+					context.Database.EnsureDeleted();
+					var repository = new TimesheetRepository(context);
+					Assert.Throws<InvalidOperationException>(() => repository.Stop(1));
+				}
+			}
+		}
+
 		/// <summary>
 		/// Builds the database context options.
 		/// </summary>
@@ -216,6 +269,18 @@ namespace Repositories
 			return new DbContextOptionsBuilder<TimesheetContext>()
 				.UseInMemoryDatabase(databaseName: dbName)
 				.Options;
+		}
+
+		/// <summary>
+		/// Determines if the specified <see cref="T:DateTime"/>s are equal within the given number of seconds.
+		/// </summary>
+		/// <returns><c>true</c>, if the DateTime objects are approximately equal within the specified tolerance, <c>false</c> otherwise.</returns>
+		/// <param name="date1">The first DateTime object to compare.</param>
+		/// <param name="date2">The second DateTime object to compare.</param>
+		/// <param name="secondsTolerance">The number of seconds to use for the comparison tolerance.</param>
+		private static bool AreDatesApproximatelyEqual(DateTime date1, DateTime date2, int secondsTolerance)
+		{
+			return date1.Ticks < (date2.Ticks + secondsTolerance * 1000);
 		}
 	}
 }

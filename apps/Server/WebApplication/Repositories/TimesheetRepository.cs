@@ -46,6 +46,20 @@ namespace WebApplication.Repositories
 		}
 
 		/// <summary>
+		/// Stop the entry with the specified Id.
+		/// </summary>
+		/// <returns>A <see cref="T:WebApplication.Model.TimesheetEntry"/> that has been stopped.</returns>
+		/// <param name="id">The ID of the <see cref="T:WebApplication.Model.TimesheetEntry"/> to stop.</param>
+		public TimesheetEntry Stop(long id)
+		{
+			var entry = this.context.TimesheetEntries.First(te => te.Id == id);
+			entry.TaskEnd = DateTime.Now;
+			this.context.SaveChanges();
+
+			return entry;
+		}
+
+		/// <summary>
 		/// Finds the Timesheet Entry with the specified Id.
 		/// </summary>
 		/// <returns>A <see cref="T:WebApplication.Model.TimesheetEntry"/> if found, null otherwise.</returns>

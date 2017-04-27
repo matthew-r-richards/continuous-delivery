@@ -18,6 +18,13 @@ namespace WebApplication.Repositories
 		void Delete(long Id);
 
 		/// <summary>
+		/// Stop the entry with the specified Id.
+		/// </summary>
+		/// <returns>A <see cref="T:WebApplication.Model.TimesheetEntry"/> that has been stopped.</returns>
+		/// <param name="id">The iD of the <see cref="T:WebApplication.Model.TimesheetEntry"/> to stop.</param>
+		TimesheetEntry Stop(long id);
+
+		/// <summary>
 		/// Finds the Timesheet Entry with the specified Id.
 		/// </summary>
 		/// <returns>A <see cref="T:WebApplication.Model.TimesheetEntry"/> if found, null otherwise.</returns>

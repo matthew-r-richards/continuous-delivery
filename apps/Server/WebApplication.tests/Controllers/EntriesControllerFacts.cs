@@ -229,6 +229,68 @@ namespace Controllers
 					repository.DidNotReceive().Delete(Arg.Any<long>());
 				}
 			}
+
+			public class Stop
+			{
+				[Fact]
+				public void Returns_Updated_Entry_If_Entry_Exists()
+				{
+					// Create the test entry
+					var endTime = DateTime.Now.AddMinutes(30);
+					var testData1 = new TimesheetEntry { Id = 1, TaskName = "Task", TaskDescription = "Task Description" };
+					var testData2 = new TimesheetEntry { Id = 1, TaskName = "Task", TaskDescription = "Task Description" }; 
+					testData2.TaskEnd = endTime;
+
+					// Mock out the repository to return the test data (entry found)
+					var repository = Substitute.For<ITimesheetRepository>();
+					repository.Find(1).Returns(testData1);
+					repository.Stop(1).Returns(testData2);
+
+					// Call the controller
+					using (var controller = new EntriesController(repository))
+					{
+						var response = controller.Stop(1);
+
+						// Check the repository was called to find the entry
+						repository.Received().Find(1);
+
+						// Check the repository was called to stop the entry
+						repository.Received().Stop(Arg.Is<long>(1));
+
+						// Check the response
+						var result = response as ObjectResult;
+						Assert.NotNull(result);
+						var entry = result.Value as TimesheetEntry;
+						Assert.NotNull(entry);
+						Assert.Equal(1, entry.Id);
+						Assert.Equal("Task", entry.TaskName);
+						Assert.Equal("Task Description", entry.TaskDescription);
+						Assert.Equal(endTime, entry.TaskEnd);
+					}
+				}
+
+				[Fact]
+				public void Returns_NotFound_If_Timesheet_Entry_Does_Not_Exist()
+				{
+					// Mock out the repository to return null (entry not found)
+					var repository = Substitute.For<ITimesheetRepository>();
+					repository.Find(Arg.Any<long>()).Returns(null as TimesheetEntry);
+
+					// Call the controller
+					using (var controller = new EntriesController(repository))
+					{
+						var response = controller.Stop(-1);
+
+						// Check the result
+						var result = response as NotFoundResult;
+						Assert.NotNull(result);
+						Assert.Equal(404, result.StatusCode);
+
+						// Check the repository was not called to delete the entry
+						repository.DidNotReceive().Stop(Arg.Any<long>());
+					}
+				}
+			}
 		}
 	}
 }
