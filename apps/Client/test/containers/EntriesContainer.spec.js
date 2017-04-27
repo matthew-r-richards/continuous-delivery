@@ -29,7 +29,8 @@ describe('<EntriesContainer/>', () => {
       EntryActionCreators: {
         loadEntries: stub(EntryActionCreators, 'loadEntries'),
         addEntry: stub(EntryActionCreators, 'addEntry'),
-        deleteEntry: stub(EntryActionCreators, 'deleteEntry')
+        deleteEntry: stub(EntryActionCreators, 'deleteEntry'),
+        stopEntry: stub(EntryActionCreators, 'stopEntry')
       }
     };
 
@@ -79,6 +80,19 @@ describe('<EntriesContainer/>', () => {
     entryList.prop('onDelete')(1);
 
     expect(stubs.EntryActionCreators.deleteEntry.calledWith(1)).to.be.true;
+  })
+
+  it('passes stopEntry to EntryList', () => {
+    const entryList = wrapper.find(EntryList);
+    const stopEntry = wrapper.instance().stopEntry;
+    expect(entryList.prop('onStop')).to.eql(stopEntry);
+  })
+
+  it('passes a bound stopEntry function to EntryList', () => {
+    const entryList = wrapper.find(EntryList);
+    entryList.prop('onStop')(1);
+
+    expect(stubs.EntryActionCreators.stopEntry.calledWith(1)).to.be.true;
   })
 
   it('should update entries when notified of a change', () => {

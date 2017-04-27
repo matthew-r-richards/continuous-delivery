@@ -49,6 +49,10 @@ export default class EntriesContainer extends Component {
         EntryActionCreators.deleteEntry(id);
     }
 
+    stopEntry(id) {
+        EntryActionCreators.stopEntry(id);
+    }
+
     render() {
         return (
             <Grid>
@@ -56,7 +60,7 @@ export default class EntriesContainer extends Component {
                     <EntryInput onSubmit={this.addEntry}/>
                 </Row>
                 <Row className="grid-row">
-                    <EntryList entries={this.state.entries} onDelete={this.deleteEntry}/>
+                    <EntryList entries={this.state.entries} onStop={this.stopEntry} onDelete={this.deleteEntry}/>
                 </Row>
             </Grid>
         )
