@@ -21,5 +21,12 @@ export default {
             type: ActionTypes.ENTRY_DELETED,
             data: data
         });
+    },
+
+    entryStopped: data => {
+        dispatcher.dispatch({
+            type: ActionTypes.ENTRY_STOPPED,
+            data: data
+        })
     }
 }
