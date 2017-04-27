@@ -1,5 +1,6 @@
 import serverActionCreators from 'actions/ServerActionCreators';
 import { APIEndpoints } from 'constants/ApiConstants';
+import logger from 'utils/Logger';
 
 import Request from 'superagent';
 
@@ -11,7 +12,11 @@ export default {
             .get(endpoint)
             .set('Accept', 'application/json')
             .end((err, response) => {
-                if (err) return console.error(err);
+                if (err) {
+                    logger.error(err);
+                    return;
+                }
+
                 serverActionCreators.receiveEntries(response.body);
             });
     },
@@ -24,8 +29,38 @@ export default {
             .set('Accept', 'application/json')
             .send({ taskName: name, taskDescription: description })
             .end((err, response) => {
-                if (err) return console.error(err);
+                if (err) {
+                    if (response && response.status === 400) {
+                        logger.error(response.body);
+                        return;
+                    } else {
+                        logger.error(err);
+                        return;
+                    }
+                }
+                
                 serverActionCreators.receiveAddedEntry(response.body);
             });
+    },
+
+    deleteEntry: id => {
+        const endpoint = APIEndpoints.ENTRIES + `/${id}`;
+
+        Request
+            .delete(endpoint)
+            .set('Accept', 'application/json')
+            .end((err, response) => {
+                if (err) {
+                    if (response && response.status === 404) {
+                        logger.error(response.body);
+                        return;
+                    } else {
+                        logger.error(err);
+                        return;
+                    }
+                }
+
+                serverActionCreators.entryDeleted(id);
+            })
     }
 }

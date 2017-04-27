@@ -14,6 +14,7 @@ describe('ApiUtils', () => {
         ServerActionCreators = reload('../../src/actions/ServerActionCreators');
         stub(ServerActionCreators, 'receiveEntries');
         stub(ServerActionCreators, 'receiveAddedEntry');
+        stub(ServerActionCreators, 'entryDeleted');
         ApiUtils = reload('../../src/utils/ApiUtils');
     });
 
@@ -42,8 +43,8 @@ describe('ApiUtils', () => {
         it('should not create an action if there is an error', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
-            .get('/entries')
-            .replyWithError('error');
+                .get('/entries')
+                .replyWithError('error');
 
             ApiUtils.getAllEntries();
 
@@ -78,8 +79,8 @@ describe('ApiUtils', () => {
         it('should not create an action if there is an error', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
-            .post('/entries')
-            .replyWithError('error');
+                .post('/entries')
+                .replyWithError('error');
 
             ApiUtils.addEntry('task 3', 'description 3');
 
@@ -87,6 +88,72 @@ describe('ApiUtils', () => {
             // in ApiUtils.addEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.receiveAddedEntry.notCalled).to.be.true;
+                done();
+            }, 20);
+        });
+
+        it('should not create an action if the supplied data was not complete (400)', done => {
+            // set up nock to create an error
+            nock('http://localhost:80/api')
+                .post('/entries', { taskName: null, taskDescription: 'description 4' })
+                .reply(400, 'Bad Request');
+
+            ApiUtils.addEntry(null, 'description 4');
+
+            // not really sure the best way of doing this, but I want to wait until the asynchronous request
+            // in ApiUtils.addEntry is complete, so that I can assert its output
+            setTimeout(() => {
+                expect(ServerActionCreators.receiveAddedEntry.notCalled).to.be.true;
+                done();
+            }, 20);
+        });
+    });
+
+    describe('deleteEntry', () => {
+        // set up nock to mock out the external API
+        nock('http://localhost:80/api')
+            .delete('/entries/1')
+            .reply(204);
+        
+        it('should create an action if there is no error', done => {
+            ApiUtils.deleteEntry(1);
+
+            // not really sure the best way of doing this, but I want to wait until the asynchronous request
+            // in ApiUtils.deleteEntry is complete, so that I can assert its output
+            setTimeout(() => {
+                expect(ServerActionCreators.entryDeleted.calledWith(1)).to.be.true;
+                done();
+            }, 20);
+        });
+
+        it('should not create an action if there is an error', done => {
+            // set up nock to create an error
+            nock('http://localhost:80/api')
+                .delete('/entries/1')
+                .replyWithError('error');
+
+            ApiUtils.deleteEntry(1);
+
+            // not really sure the best way of doing this, but I want to wait until the asynchronous request
+            // in ApiUtils.deleteEntry is complete, so that I can assert its output
+            setTimeout(() => {
+                expect(ServerActionCreators.entryDeleted.notCalled).to.be.true;
+                done();
+            }, 20);
+        });
+
+        it('should not create an action if the Entry was not found (404)', done => {
+            // set up nock to create an error
+            nock('http://localhost:80/api')
+                .delete('/entries/-1')
+                .reply(404, 'Not Found');
+
+            ApiUtils.deleteEntry(-1);
+
+            // not really sure the best way of doing this, but I want to wait until the asynchronous request
+            // in ApiUtils.deleteEntry is complete, so that I can assert its output
+            setTimeout(() => {
+                expect(ServerActionCreators.entryDeleted.notCalled).to.be.true;
                 done();
             }, 20);
         });
