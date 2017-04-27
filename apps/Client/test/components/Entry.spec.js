@@ -2,11 +2,13 @@ import React from 'react';
 import { shallow } from 'enzyme';
 import { expect } from 'chai';
 import { Col, Button, Glyphicon } from 'react-bootstrap';
+import { spy } from 'sinon';
 
 import Entry from 'components/Entry';
 
 describe('<Entry/>', () => {
   let wrapper;
+  let onDeleteSpy;
   const amTime = new Date();
   amTime.setHours(9);
   amTime.setMinutes(30);
@@ -16,7 +18,8 @@ describe('<Entry/>', () => {
 
   beforeEach(() => {
     const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
-    wrapper = shallow(<Entry data={entry}/>);
+    onDeleteSpy = spy();
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
   });
 
   it('should display entry details', () => {
@@ -31,7 +34,7 @@ describe('<Entry/>', () => {
 
   it('should display in progress when end date is not defined', () => {
     const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
-    wrapper = shallow(<Entry data={entry}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
     expect(wrapper.containsAllMatchingElements(
       [
         <Col>9:30 AM</Col>,
@@ -57,7 +60,7 @@ describe('<Entry/>', () => {
 
     // no end time
     const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
-    wrapper = shallow(<Entry data={entry}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
     expect(wrapper.containsAllMatchingElements(
       [
         <Button><Glyphicon glyph="stop" /></Button>
