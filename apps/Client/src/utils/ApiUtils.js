@@ -62,5 +62,26 @@ export default {
 
                 serverActionCreators.entryDeleted(id);
             })
+    },
+
+    stopEntry: id => {
+        const endpoint = APIEndpoints.ENTRIES + `/${id}/stop`;
+
+        Request
+            .post(endpoint)
+            .set('Accept', 'application/json')
+            .end((err, response) => {
+                if (err) {
+                    if (response && response.status === 404) {
+                        logger.error(response.body);
+                        return;
+                    } else {
+                        logger.error(err);
+                        return;
+                    }
+                }
+
+                serverActionCreators.entryStopped(response.body);
+            })
     }
 }

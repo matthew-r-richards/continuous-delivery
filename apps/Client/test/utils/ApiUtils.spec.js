@@ -15,6 +15,7 @@ describe('ApiUtils', () => {
         stub(ServerActionCreators, 'receiveEntries');
         stub(ServerActionCreators, 'receiveAddedEntry');
         stub(ServerActionCreators, 'entryDeleted');
+        stub(ServerActionCreators, 'entryStopped');
         ApiUtils = reload('../../src/utils/ApiUtils');
     });
 
@@ -154,6 +155,58 @@ describe('ApiUtils', () => {
             // in ApiUtils.deleteEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.entryDeleted.notCalled).to.be.true;
+                done();
+            }, 20);
+        });
+    });
+
+    describe('stopEntry', () => {
+        const mockData = { id: 1, taskName: 'task 1', taskDescription: 'description 1', taskStart: new Date().toUTCString(), taskEnd: null };
+
+        // set up nock to mock out the external API
+        nock('http://localhost:80/api')
+            .post('/entries/1/stop')
+            .reply(200, mockData);
+        
+        it('should create an action if there is no error', done => {
+            ApiUtils.stopEntry(1);
+
+            // not really sure the best way of doing this, but I want to wait until the asynchronous request
+            // in ApiUtils.stopEntry is complete, so that I can assert its output
+            setTimeout(() => {
+                expect(ServerActionCreators.entryStopped.calledWith(mockData)).to.be.true;
+                done();
+            }, 20);
+        });
+
+        it('should not create an action if there is an error', done => {
+            // set up nock to create an error
+            nock('http://localhost:80/api')
+                .post('/entries/1/stop')
+                .replyWithError('error');
+
+            ApiUtils.stopEntry(1);
+
+            // not really sure the best way of doing this, but I want to wait until the asynchronous request
+            // in ApiUtils.stopEntry is complete, so that I can assert its output
+            setTimeout(() => {
+                expect(ServerActionCreators.entryStopped.notCalled).to.be.true;
+                done();
+            }, 20);
+        });
+
+        it('should not create an action if the Entry was not found (404)', done => {
+            // set up nock to create an error
+            nock('http://localhost:80/api')
+                .delete('/entries/-1/stop')
+                .reply(404, 'Not Found');
+
+            ApiUtils.stopEntry(-1);
+
+            // not really sure the best way of doing this, but I want to wait until the asynchronous request
+            // in ApiUtils.stopEntry is complete, so that I can assert its output
+            setTimeout(() => {
+                expect(ServerActionCreators.entryStopped.notCalled).to.be.true;
                 done();
             }, 20);
         });
