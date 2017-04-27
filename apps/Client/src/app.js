@@ -48,10 +48,11 @@ app.get("/api/entries", (req, res) => {
         json: true
     }
 
-    logger.info(`Calling external API at GET ${API_URL}/entries`)
+    logExternalApiCall(options);
+
     request(options, (error, response, body) => {
         if (error) {
-            logger.error(`Error in making API call to GET ${options.url}: ${error}`);
+            logApiCallError(options, error);
             res.status(500).send('Error in making API call');
         } else if (response.statusCode == 200) {
             res.send(body);
@@ -81,10 +82,11 @@ app.post("/api/entries", (req, res) => {
         body: jsonBody
     }
 
-    logger.info(`Calling external API at POST ${API_URL}/entries`)
+    logExternalApiCall(options);
+
     request(options, (error, response, body) => {
         if (error) {
-            logger.error(`Error in making API call to POST ${options.url}: ${error}`);
+            logApiCallError(options, error);
             res.status(500).send('Error in making API call');
         } else if (response.statusCode == 201) {
             res.status(201).send(body);
@@ -105,10 +107,11 @@ app.delete("/api/entries/:id", (req, res) => {
         json: true
     }
 
-    logger.info(`Calling external API at DELETE ${API_URL}/entries/${id}`)
+    logExternalApiCall(options);
+
     request(options, (error, response, body) => {
         if (error) {
-            logger.error(`Error in making API call to DELETE ${options.url}: ${error}`);
+            logApiCallError(options, error);
             res.status(500).send('Error in making API call');
         } else if (response.statusCode == 404) {
             res.status(404).send(`Entry with ID ${id} not found`);
@@ -119,6 +122,41 @@ app.delete("/api/entries/:id", (req, res) => {
         }
     });
 });
+
+// POST api/entries/{id}/stop
+app.post("/api/entries/:id/stop", (req, res) => {
+    const id = req.params.id;
+    logger.info(`POST /api/entries/${id}/stop`);
+
+    const options = {
+        url: API_URL + `/entries/${id}/stop`,
+        method: 'POST',
+        json: true
+    }
+
+    logExternalApiCall(options);
+
+    request(options, (error, response, body) => {
+        if (error) {
+            logApiCallError(options, error);
+            res.status(500).send('Error in making API call');
+        } else if (response.statusCode == 404) {
+            res.status(404).send(`Entry with ID ${id} not found`);
+        } else if (response.statusCode == 200) {
+            res.status(200).send(body);
+        } else {
+            res.status(500).send('Unexpected response from API');
+        }
+    });
+});
+
+function logExternalApiCall(options) {
+    logger.info(`Calling external API at ${options.method} ${options.url}`);
+}
+
+function logApiCallError(options, error) {
+    logger.error(`Error in making API call to ${options.method} ${options.url}: ${error}`);
+}
 
 app.listen(PORT, () => {
   logger.info('Listening at Port ' + PORT + '...');
