@@ -8,7 +8,7 @@ export default class EntryList extends Component {
         let content;
         if (entriesExist) {
             content = this.props.entries.map((entry, index) => (
-                <Entry key={index} data={entry}/>));
+                <Entry key={index} data={entry} onDelete={this.props.onDelete}/>));
         } else {
             content = 'No timesheet entries defined...';
         }
@@ -22,5 +22,6 @@ export default class EntryList extends Component {
 }
 
 EntryList.propTypes = {
-    entries: React.PropTypes.array.isRequired
-} 
+    entries: React.PropTypes.array.isRequired,
+    onDelete: React.PropTypes.func.isRequired
+};
