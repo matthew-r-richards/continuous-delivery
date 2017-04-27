@@ -42,6 +42,7 @@ describe('EntryStore', () => {
         const action = {
             type: ActionTypes.RECEIVE_ADD_ENTRY,
             data: {
+                id: 1,
                 name: 'new name',
                 description: 'new description'
             }
@@ -52,6 +53,7 @@ describe('EntryStore', () => {
         // check the Store contents
         const entries = EntryStore.getAllEntries();
         expect(entries.length).to.equal(1);
+        expect(entries[0].id).to.equal(1);
         expect(entries[0].name).to.equal('new name');
         expect(entries[0].description).to.equal('new description');
 
@@ -59,11 +61,52 @@ describe('EntryStore', () => {
         expect(EntryStore.emitChange.calledOnce).to.be.true;
     });
 
+    it('should delete an entry from the store', () => {
+        // NOTE: This test has a dependency on the store being able to retrieve
+        // entries correctly, i.e. correctly process the RECEIVE_ENTRIES action
+        // define two initial test entries
+        const testEntries = [
+            { id: 1, name: 'name 1', description: 'description 1' },
+            { id: 2, name: 'name 2', description: 'description 2' }
+        ]
+        let action = {
+            type: ActionTypes.RECEIVE_ENTRIES,
+            data: testEntries
+        }
+
+        dispatcherCallback(action);
+
+        // reset the call counter on the emitChange spy so that we can check
+        // if it is called as part of the delete
+        EntryStore.emitChange.reset();
+
+        // check that the second item does actually exist
+        const entriesBefore = EntryStore.getAllEntries();
+        expect(entriesBefore).to.have.length(2);
+        expect(entriesBefore[1].id).to.equal(2);
+
+        // trigger the dispatcher callback
+        action = {
+            type: ActionTypes.ENTRY_DELETED,
+            data: 2
+        }
+
+        dispatcherCallback(action);
+
+        // check that the second item has been deleted
+        const entriesAfter = EntryStore.getAllEntries();
+        expect(entriesAfter).to.have.length(1);
+        expect(entriesAfter[0].id).to.not.equal(2);
+
+        // check the change event was emitted
+        expect(EntryStore.emitChange.calledOnce).to.be.true;
+    })
+
     it('should load entries into the store', () => {
         // trigger the dispatcher callback
         const expectedEntries = [
-            { name: 'name 1', description: 'description 1' },
-            { name: 'name 2', description: 'description 2' }
+            { id: 1, name: 'name 1', description: 'description 1' },
+            { id: 2, name: 'name 2', description: 'description 2' }
         ]
         const action = {
             type: ActionTypes.RECEIVE_ENTRIES,
