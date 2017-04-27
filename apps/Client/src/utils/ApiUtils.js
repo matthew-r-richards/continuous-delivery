@@ -81,7 +81,7 @@ export default {
                     }
                 }
 
-                serverActionCreators.entryStopped(response.body);
+                serverActionCreators.entryUpdated(response.body);
             })
     }
 }

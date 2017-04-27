@@ -12,7 +12,7 @@ export const ActionTypes = keyMirror({
     DELETE_ENTRY: null,
     ENTRY_DELETED: null,
     STOP_ENTRY: null,
-    ENTRY_STOPPED: null,
+    ENTRY_UPDATED: null,
     LOAD_ENTRIES: null,
     RECEIVE_ENTRIES: null
 });

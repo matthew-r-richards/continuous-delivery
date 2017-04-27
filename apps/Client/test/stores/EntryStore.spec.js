@@ -102,6 +102,61 @@ describe('EntryStore', () => {
         expect(EntryStore.emitChange.calledOnce).to.be.true;
     })
 
+    it('should update an entry in the store', () => {
+        // NOTE: This test has a dependency on the store being able to retrieve
+        // entries correctly, i.e. correctly process the RECEIVE_ENTRIES action
+        // define an initial test entry
+        const startTime = new Date();
+        const endTime = new Date();
+        const initialEntries = [
+            { id: 1, name: 'name 1', description: 'description 1', taskStart: startTime, taskEnd: endTime },
+            { id: 2, name: 'name 2', description: 'description 2', taskStart: startTime, taskEnd: null },
+            { id: 3, name: 'name 3', description: 'description 3', taskStart: startTime, taskEnd: endTime }
+        ]
+        let action = {
+            type: ActionTypes.RECEIVE_ENTRIES,
+            data: initialEntries
+        }
+
+        dispatcherCallback(action);
+
+        // reset the call counter on the emitChange spy so that we can check
+        // if it is called as part of the update process
+        EntryStore.emitChange.reset();
+
+        let newStartTime = startTime;
+        newStartTime.setTime(newStartTime.getTime - 1000 * 60);
+        let newEndTime = endTime;
+        newEndTime.setTime(newEndTime.getTime )
+
+        const updatedEntry = {
+            id: 2,
+            name: 'new name',
+            description: 'new description',
+            taskStart: newStartTime,
+            taskEnd: newEndTime
+        }
+
+        // trigger the dispatcher callback
+        action = {
+            type: ActionTypes.ENTRY_UPDATED,
+            data: updatedEntry
+        }
+
+        dispatcherCallback(action);
+
+        // check that the item has been updated
+        const entries = EntryStore.getAllEntries();
+        expect(entries[1].id).to.equal(2);
+        expect(entries[1].name).to.equal('new name');
+        expect(entries[1].description).to.equal('new description');
+        expect(entries[1].taskStart).to.equal(newStartTime);
+        expect(entries[1].taskEnd).to.equal(newEndTime);
+
+        // check the change event was emitted
+        expect(EntryStore.emitChange.calledOnce).to.be.true;
+    })
+
     it('should load entries into the store', () => {
         // trigger the dispatcher callback
         const expectedEntries = [

@@ -23,9 +23,9 @@ export default {
         });
     },
 
-    entryStopped: data => {
+    entryUpdated: data => {
         dispatcher.dispatch({
-            type: ActionTypes.ENTRY_STOPPED,
+            type: ActionTypes.ENTRY_UPDATED,
             data: data
         })
     }

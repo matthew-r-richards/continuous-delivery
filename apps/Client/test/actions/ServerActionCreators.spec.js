@@ -37,11 +37,11 @@ describe('ServerActionCreators', () => {
         expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
     });
 
-    it('dispatches an event after an entry has been stopped', () => {
+    it('dispatches an event after an entry has been updated', () => {
         const id = 1;
-        ServerActionCreators.entryStopped(id);
+        ServerActionCreators.entryUpdated(id);
         const expectedAction = {
-            type: ActionTypes.ENTRY_STOPPED,
+            type: ActionTypes.ENTRY_UPDATED,
             data: id
         };
 

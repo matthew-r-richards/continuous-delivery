@@ -15,7 +15,7 @@ describe('ApiUtils', () => {
         stub(ServerActionCreators, 'receiveEntries');
         stub(ServerActionCreators, 'receiveAddedEntry');
         stub(ServerActionCreators, 'entryDeleted');
-        stub(ServerActionCreators, 'entryStopped');
+        stub(ServerActionCreators, 'entryUpdated');
         ApiUtils = reload('../../src/utils/ApiUtils');
     });
 
@@ -174,7 +174,7 @@ describe('ApiUtils', () => {
             // not really sure the best way of doing this, but I want to wait until the asynchronous request
             // in ApiUtils.stopEntry is complete, so that I can assert its output
             setTimeout(() => {
-                expect(ServerActionCreators.entryStopped.calledWith(mockData)).to.be.true;
+                expect(ServerActionCreators.entryUpdated.calledWith(mockData)).to.be.true;
                 done();
             }, 20);
         });
@@ -190,7 +190,7 @@ describe('ApiUtils', () => {
             // not really sure the best way of doing this, but I want to wait until the asynchronous request
             // in ApiUtils.stopEntry is complete, so that I can assert its output
             setTimeout(() => {
-                expect(ServerActionCreators.entryStopped.notCalled).to.be.true;
+                expect(ServerActionCreators.entryUpdated.notCalled).to.be.true;
                 done();
             }, 20);
         });
@@ -206,7 +206,7 @@ describe('ApiUtils', () => {
             // not really sure the best way of doing this, but I want to wait until the asynchronous request
             // in ApiUtils.stopEntry is complete, so that I can assert its output
             setTimeout(() => {
-                expect(ServerActionCreators.entryStopped.notCalled).to.be.true;
+                expect(ServerActionCreators.entryUpdated.notCalled).to.be.true;
                 done();
             }, 20);
         });

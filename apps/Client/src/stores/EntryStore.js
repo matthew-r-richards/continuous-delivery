@@ -38,10 +38,21 @@ class EntryStore extends EventEmitter {
 
     removeEntry(data) {
         const id = data;
-        var indexToRemove = this.entries.findIndex(entry => entry.id == id );
+        const indexToRemove = this.entries.findIndex(entry => entry.id === id);
 
         if (indexToRemove !== -1) {
             this.entries.splice(indexToRemove, 1);
+            this.emitChange();
+        }
+    }
+
+    updateEntry(data) {
+        const id = data.id;
+        const indexToUpdate = this.entries.findIndex(entry => entry.id === id);
+
+        if (indexToUpdate !== -1) {
+            // insert the new element in place of the old one
+            this.entries.splice(indexToUpdate, 1, data);
             this.emitChange();
         }
     }
@@ -63,6 +74,10 @@ entryStore.dispatchToken = EntryDispatcher.register(action => {
 
         case ActionTypes.ENTRY_DELETED:
             entryStore.removeEntry(action.data);
+            break;
+        
+        case ActionTypes.ENTRY_UPDATED:
+            entryStore.updateEntry(action.data);
             break;
 
         return true;
