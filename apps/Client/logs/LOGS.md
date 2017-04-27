@@ -1,0 +1,2 @@
+This directory will be used to store the application logs.
+Log file are suffixed with an ascending counter, with the highest counter signifying the oldest log file (i.e. the file without a suffix is the current log file).
