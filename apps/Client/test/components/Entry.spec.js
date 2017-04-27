@@ -17,12 +17,13 @@ describe('<Entry/>', () => {
   pmTime.setMinutes(59);
 
   beforeEach(() => {
-    const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
     onDeleteSpy = spy();
-    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
   });
 
   it('should display entry details', () => {
+    const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+
     expect(wrapper.containsAllMatchingElements(
       [
         <Col>new name</Col>,
@@ -33,8 +34,9 @@ describe('<Entry/>', () => {
   });
 
   it('should display in progress when end date is not defined', () => {
-    const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
+    const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
     wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+
     expect(wrapper.containsAllMatchingElements(
       [
         <Col>9:30 AM</Col>,
@@ -43,28 +45,34 @@ describe('<Entry/>', () => {
   });
 
   it('should render a delete button', () => {
-    expect(wrapper.containsAllMatchingElements(
-      [
-         <Button bsStyle="danger"><Glyphicon glyph="remove" /></Button>
-      ]
-    )).to.be.true;
+    const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+
+    expect(wrapper.find('#deleteBtn')).to.have.length(1);
   });
 
   it('should only render the stop button if the entry does not have an end time', () => {
+    let entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+
     // case where an end time is defined
-        expect(wrapper.containsAllMatchingElements(
-      [
-        <Button><Glyphicon glyph="stop" /></Button>
-      ]
-    )).to.be.false;
+    expect(wrapper.find('#stopBtn')).to.have.length(0);
 
     // no end time
-    const entry = { taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
+    entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
     wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
-    expect(wrapper.containsAllMatchingElements(
-      [
-        <Button><Glyphicon glyph="stop" /></Button>
-      ]
-    )).to.be.true;
+
+    expect(wrapper.find('#stopBtn')).to.have.length(1);
+  });
+
+  it('should call onDelete when Delete is clicked', () => {
+    const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+    const deleteButton = wrapper.find('#deleteBtn');
+
+    deleteButton.simulate('click');
+
+    expect(onDeleteSpy.calledOnce).to.be.true;
+    expect(onDeleteSpy.calledWith(1));
   })
 });
