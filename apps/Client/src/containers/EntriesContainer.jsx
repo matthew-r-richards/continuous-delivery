@@ -17,6 +17,7 @@ export default class EntriesContainer extends Component {
         };
 
         this.addEntry = this.addEntry.bind(this);
+        this.deleteEntry = this.deleteEntry.bind(this);
         this.onChange = this.onChange.bind(this);
     }
 
@@ -44,6 +45,10 @@ export default class EntriesContainer extends Component {
         EntryActionCreators.addEntry(name, description);
     }
 
+    deleteEntry(id) {
+        EntryActionCreators.deleteEntry(id);
+    }
+
     render() {
         return (
             <Grid>
@@ -51,7 +56,7 @@ export default class EntriesContainer extends Component {
                     <EntryInput onSubmit={this.addEntry}/>
                 </Row>
                 <Row className="grid-row">
-                    <EntryList entries={this.state.entries}/>
+                    <EntryList entries={this.state.entries} onDelete={this.deleteEntry}/>
                 </Row>
             </Grid>
         )

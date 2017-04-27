@@ -28,7 +28,8 @@ describe('<EntriesContainer/>', () => {
       },
       EntryActionCreators: {
         loadEntries: stub(EntryActionCreators, 'loadEntries'),
-        addEntry: stub(EntryActionCreators, 'addEntry')
+        addEntry: stub(EntryActionCreators, 'addEntry'),
+        deleteEntry: stub(EntryActionCreators, 'deleteEntry')
       }
     };
 
@@ -40,13 +41,8 @@ describe('<EntriesContainer/>', () => {
   });
 
   it('should render EntryInput and EntryList components', () => {
-      expect(wrapper.containsAllMatchingElements([
-      <EntryInput/>
-    ])).to.be.true;
-
-    expect(wrapper.containsAllMatchingElements([
-      <EntryList/>
-    ])).to.be.true;
+    expect(wrapper.find(EntryInput)).to.have.length(1);
+    expect(wrapper.find(EntryList)).to.have.length(1);
   });
 
   it('should dispatch an action to load all entries on mounting', () => {
@@ -70,6 +66,19 @@ describe('<EntriesContainer/>', () => {
     entryInput.prop('onSubmit')('new name', 'new description')
 
     expect(stubs.EntryActionCreators.addEntry.calledWith('new name', 'new description')).to.be.true;
+  })
+
+  it('passes deleteEntry to EntryList', () => {
+    const entryList = wrapper.find(EntryList);
+    const deleteEntry = wrapper.instance().deleteEntry;
+    expect(entryList.prop('onDelete')).to.eql(deleteEntry);
+  })
+
+  it('passes a bound deleteEntry function to EntryList', () => {
+    const entryList = wrapper.find(EntryList);
+    entryList.prop('onDelete')(1);
+
+    expect(stubs.EntryActionCreators.deleteEntry.calledWith(1)).to.be.true;
   })
 
   it('should update entries when notified of a change', () => {
