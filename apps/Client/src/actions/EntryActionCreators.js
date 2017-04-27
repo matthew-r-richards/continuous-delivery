@@ -27,5 +27,13 @@ export default {
             data: id
         });
         apiUtils.deleteEntry(id);
+    },
+
+    stopEntry: id => {
+        dispatcher.dispatch({
+            type: ActionTypes.STOP_ENTRY,
+            data: id
+        });
+        apiUtils.stopEntry(id);
     }
 }

@@ -16,6 +16,7 @@ describe('EntryActionCreators', () => {
         ApiUtils = reload('../../src/utils/ApiUtils');
         stub(ApiUtils, 'addEntry');
         stub(ApiUtils, 'deleteEntry');
+        stub(ApiUtils, 'stopEntry');
         stub(ApiUtils, 'getAllEntries');
         EntryActionCreators = reload('../../src/actions/EntryActionCreators');
     })
@@ -43,6 +44,17 @@ describe('EntryActionCreators', () => {
         
         expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
         expect(ApiUtils.deleteEntry.calledWith(1)).to.be.true;
+    });
+
+    it('dispatches an event and initiates an API call to stop an Entry', () => {
+        EntryActionCreators.stopEntry(1);
+        const expectedAction = {
+            type: ActionTypes.STOP_ENTRY,
+            data: 1
+        };
+        
+        expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
+        expect(ApiUtils.stopEntry.calledWith(1)).to.be.true;
     });
 
     it('dispatches an event and initiates an API call to get all Entries', () => {
