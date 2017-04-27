@@ -14,5 +14,12 @@ export default {
             type: ActionTypes.RECEIVE_ADD_ENTRY,
             data: data
         });
+    },
+
+    entryDeleted: data => {
+        dispatcher.dispatch({
+            type: ActionTypes.ENTRY_DELETED,
+            data: data
+        });
     }
 }

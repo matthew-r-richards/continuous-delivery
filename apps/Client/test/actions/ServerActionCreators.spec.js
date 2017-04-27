@@ -26,6 +26,17 @@ describe('ServerActionCreators', () => {
         expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
     });
 
+    it('dispatches an event after an entry has been deleted', () => {
+        const id = 1;
+        ServerActionCreators.entryDeleted(id);
+        const expectedAction = {
+            type: ActionTypes.ENTRY_DELETED,
+            data: id
+        };
+
+        expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
+    });
+
     it('dispatches an event after all entries have been retrieved', () => {
         const entries = [
             { name: 'new name 1', description: 'new description 1' },
