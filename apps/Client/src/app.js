@@ -3,7 +3,7 @@ const path = require('path');
 const app = express();
 const request = require('request');
 const bodyParser = require('body-parser');
-const logger = require('./utils/Logger');
+const logger = require('./utils/ServerLogger');
 app.use(bodyParser.json()); // support json encoded bodies
 app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV == 'development') {
     }));
 
     app.use(webpackHotMiddleware(compiler, {
-        log: logger.log
+        log: console.log
     }))
 } else {
     logger.info('Running in production mode...');

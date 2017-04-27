@@ -1,6 +1,6 @@
 import serverActionCreators from 'actions/ServerActionCreators';
 import { APIEndpoints } from 'constants/ApiConstants';
-import logger from 'utils/Logger';
+import logger from 'utils/ClientLogger';
 
 import Request from 'superagent';
 
