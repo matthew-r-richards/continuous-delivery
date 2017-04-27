@@ -4,11 +4,10 @@ import request from 'supertest';
 import app from 'app';
 
 const testApp = request(app);
+const API_URL = 'http://localhost:5000/api';
 
 describe('Client App', () => {
     describe('GET /api/entries', () => {
-        const API_URL = 'http://localhost:5000/api';
-
         const mockData = [
             { id: 1, taskName: 'task 1', taskDescription: 'description 1', taskStart: new Date().toUTCString(), taskEnd: null },
             { id: 2, taskName: 'task 2', taskDescription: null, taskStart: new Date().toUTCString(), taskEnd: new Date().toUTCString() }
@@ -58,9 +57,7 @@ describe('Client App', () => {
         });
     });
 
-    describe('POST/api/entries', () => {
-        const API_URL = 'http://localhost:5000/api';
-
+    describe('POST /api/entries', () => {
         const mockData = { id: 3, taskName: 'new task', taskDescription: 'new description', taskStart: new Date().toUTCString(), taskEnd: null }
 
         // set up nock to mock out the external API
@@ -119,6 +116,58 @@ describe('Client App', () => {
             testApp
                 .post('/api/entries')
                 .send({ taskName: 'new task', taskDescription: 'new description' })
+                .expect(500)
+                .expect('Unexpected response from API', done); 
+        });
+    });
+
+    describe('DELETE /api/entries/{id}', () => {
+        // set up nock to mock out the external API
+        nock(API_URL)
+            .defaultReplyHeaders({
+                'Content-Tye': 'application/json'
+            })
+            .delete('/entries/1')
+            .reply(204)
+
+        it('should proxy request to external API and return response if it receives a 204 status', done => {
+            testApp
+                .delete('/api/entries/1')
+                .expect(204, done);
+        });
+
+        it('should return 404 status if the Entry does not exist', done => {
+            // set up the mocked API to return a 404 response
+            nock(API_URL)
+                .delete('/entries/-1')
+                .reply(404);
+
+            testApp
+                .delete('/api/entries/-1')
+                .expect(404)
+                .expect('Entry with ID -1 not found', done); 
+        });
+
+        it('should return 500 status if an error is encountered', done => {
+            // set up the mocked API to return an error when attempting to call it
+            nock(API_URL)
+                .delete('/entries/1')
+                .replyWithError('error');
+
+            testApp
+                .delete('/api/entries/1')
+                .expect(500)
+                .expect('Error in making API call', done); 
+        });
+
+        it('should return 500 status if an unknown response is received', done => {
+            // set up the mocked API to return an unexpected response (not 200 or 500)
+            nock(API_URL)
+                .delete('/entries/1')
+                .reply(401);
+
+            testApp
+                .delete('/api/entries/1')
                 .expect(500)
                 .expect('Unexpected response from API', done); 
         });
