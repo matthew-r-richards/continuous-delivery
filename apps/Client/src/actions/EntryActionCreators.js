@@ -19,5 +19,13 @@ export default {
             }
         });
         apiUtils.addEntry(name, description);
+    },
+
+    deleteEntry: id => {
+        dispatcher.dispatch({
+            type: ActionTypes.DELETE_ENTRY,
+            data: id
+        });
+        apiUtils.deleteEntry(id);
     }
 }
