@@ -8,7 +8,7 @@ import Entry from 'components/Entry';
 
 describe('<Entry/>', () => {
   let wrapper;
-  let onDeleteSpy;
+  let onDeleteSpy, onStopSpy;
   const amTime = new Date();
   amTime.setHours(9);
   amTime.setMinutes(30);
@@ -18,11 +18,12 @@ describe('<Entry/>', () => {
 
   beforeEach(() => {
     onDeleteSpy = spy();
+    onStopSpy = spy();
   });
 
   it('should display entry details', () => {
     const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
-    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy} onStop={onStopSpy}/>);
 
     expect(wrapper.containsAllMatchingElements(
       [
@@ -35,7 +36,7 @@ describe('<Entry/>', () => {
 
   it('should display in progress when end date is not defined', () => {
     const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
-    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy} onStop={onStopSpy}/>);
 
     expect(wrapper.containsAllMatchingElements(
       [
@@ -46,33 +47,44 @@ describe('<Entry/>', () => {
 
   it('should render a delete button', () => {
     const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
-    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy} onStop={onStopSpy}/>);
 
     expect(wrapper.find('#deleteBtn')).to.have.length(1);
   });
 
   it('should only render the stop button if the entry does not have an end time', () => {
     let entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: pmTime };
-    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy} onStop={onStopSpy}/>);
 
     // case where an end time is defined
     expect(wrapper.find('#stopBtn')).to.have.length(0);
 
     // no end time
     entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
-    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy} onStop={onStopSpy}/>);
 
     expect(wrapper.find('#stopBtn')).to.have.length(1);
   });
 
   it('should call onDelete when Delete is clicked', () => {
     const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
-    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy}/>);
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy} onStop={onStopSpy}/>);
     const deleteButton = wrapper.find('#deleteBtn');
 
     deleteButton.simulate('click');
 
     expect(onDeleteSpy.calledOnce).to.be.true;
     expect(onDeleteSpy.calledWith(1));
+  });
+
+  it('should call onStop when Stop is clicked', () => {
+    const entry = { id: 1, taskName: 'new name', taskDescription: 'new description', taskStart: amTime, taskEnd: null };
+    wrapper = shallow(<Entry data={entry} onDelete={onDeleteSpy} onStop={onStopSpy}/>);
+    const stopButton = wrapper.find('#stopBtn');
+
+    stopButton.simulate('click');
+
+    expect(onStopSpy.calledOnce).to.be.true;
+    expect(onStopSpy.calledWith(1));
   })
 });

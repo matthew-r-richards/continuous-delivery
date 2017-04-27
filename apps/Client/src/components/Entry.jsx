@@ -7,6 +7,11 @@ export default class Entry extends Component {
         super();
 
         this.handleDeleteClick = this.handleDeleteClick.bind(this);
+        this.handleStopClick = this.handleStopClick.bind(this);
+    }
+
+    handleStopClick() {
+        this.props.onStop(this.props.data.id);
     }
 
     handleDeleteClick() {
@@ -28,7 +33,7 @@ export default class Entry extends Component {
                     <Col md={2} className="entry-details">{formattedEndTime}</Col>
                     <Col md={2} mdPush={2}>
                         <ButtonToolbar>
-                            { displayStop && <Button id="stopBtn" bsSize="small"><Glyphicon glyph="stop" /></Button> }
+                            { displayStop && <Button id="stopBtn" bsSize="small" onClick={this.handleStopClick}><Glyphicon glyph="stop" /></Button> }
                             <Button id="deleteBtn" bsStyle="danger" bsSize="small" onClick={this.handleDeleteClick}><Glyphicon glyph="remove" /></Button>
                         </ButtonToolbar>
                     </Col>
@@ -41,5 +46,6 @@ export default class Entry extends Component {
 
 Entry.propTypes = {
     data: React.PropTypes.object.isRequired,
+    onStop: React.PropTypes.func.isRequired,
     onDelete: React.PropTypes.func.isRequired
 };
