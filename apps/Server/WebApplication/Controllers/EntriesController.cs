@@ -102,7 +102,7 @@ namespace WebApplication.Controllers
 		/// <param name="id">The ID of the Timesheet Entry to stop.</param>
 		/// <response code="200">Entry stopped</response>
 		/// <response code="404">Entry not found</response>
-		[HttpDelete("{id}")]
+		[HttpPost("{id}/stop")]
 		[ProducesResponseType(typeof(TimesheetEntry), 200)]
 		[ProducesResponseType(typeof(void), 404)]
 		public IActionResult Stop(long id)
