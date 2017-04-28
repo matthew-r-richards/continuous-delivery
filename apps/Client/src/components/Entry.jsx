@@ -28,7 +28,6 @@ export default class Entry extends Component {
     }
 
     calculateElapsedTime() {
-        console.log('in calculated elapsed time');
         const entry = this.props.data;
         const endTime = entry.taskEnd ? moment(entry.taskEnd) : moment();
         const diffInMinutes = endTime.diff(moment(entry.taskStart), 'minutes');
