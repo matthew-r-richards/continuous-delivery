@@ -6,6 +6,7 @@ import EntryList from 'components/EntryList'
 
 import EntryActionCreators from 'actions/EntryActionCreators';
 import EntryStore from 'stores/EntryStore';
+import { StoreEvents } from 'constants/ApiConstants';
 
 export default class EntriesContainer extends Component {
     constructor(props) {
@@ -23,7 +24,7 @@ export default class EntriesContainer extends Component {
 
     componentDidMount() {
         // listen for changes in the store
-        EntryStore.addChangeListener(this.onChange);
+        EntryStore.addChangeListener(StoreEvents.ENTRIES_CHANGED, this.onChange);
 
         // create the action to load the initial data
         EntryActionCreators.loadEntries();
@@ -31,7 +32,7 @@ export default class EntriesContainer extends Component {
 
     componentWillUnmount() {
         // stop listening for changes in the store
-        EntryStore.removeChangeListener(this.onChange);
+        EntryStore.removeChangeListener(StoreEvents.ENTRIES_CHANGED, this.onChange);
     }
 
     onChange() {

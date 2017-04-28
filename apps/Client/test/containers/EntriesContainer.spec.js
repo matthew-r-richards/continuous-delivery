@@ -5,20 +5,20 @@ import { stub } from 'sinon';
 
 import reload from 'helpers/reload';
 
-import EntryInput from 'components/EntryInput';
 import EntryList from 'components/EntryList';
+import { StoreEvents } from 'constants/ApiConstants';
 
 describe('<EntriesContainer/>', () => {
   let EntriesContainer;
   let wrapper;
-  let EntryStore;
-  let EntryActionCreators;
+  let EntryStore, EntryActionCreators, EntryInput;
   let addEntryStub;
   let stubs;
 
   beforeEach(() => {
     EntryStore = reload('../../src/stores/EntryStore');
     EntryActionCreators = reload('../../src/actions/EntryActionCreators');
+    EntryInput = reload('../../src/components/EntryInput');
 
     stubs = {
       EntryStore: {
@@ -110,13 +110,15 @@ describe('<EntriesContainer/>', () => {
 
   it('should add a change listener on mounting', () => {
     wrapper = mount(<EntriesContainer/>);
-    expect(stubs.EntryStore.addChangeListener.calledOnce).to.be.true;
+    const onChange = wrapper.instance().onChange;
+    expect(stubs.EntryStore.addChangeListener.calledWith(StoreEvents.ENTRIES_CHANGED, onChange)).to.be.true;
   });
 
   it('should remove the change listener on unmounting', () => {
     wrapper = mount(<EntriesContainer/>);
+    const onChange = wrapper.instance().onChange;
     wrapper.unmount();
-    expect(stubs.EntryStore.removeChangeListener.calledOnce).to.be.true;
+    expect(stubs.EntryStore.removeChangeListener.calledWith(StoreEvents.ENTRIES_CHANGED, onChange)).to.be.true;
   });
 
   it('should pass entries to EntryList for rendering', () => {

@@ -16,3 +16,8 @@ export const ActionTypes = keyMirror({
     LOAD_ENTRIES: null,
     RECEIVE_ENTRIES: null
 });
+
+export const StoreEvents = keyMirror({
+    ENTRIES_CHANGED: null,
+    ENTRY_ADDED: null
+});

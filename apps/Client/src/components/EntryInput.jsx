@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Button, FormGroup, ControlLabel, FormControl, Form, Grid } from 'react-bootstrap';
+import EntryStore from 'stores/EntryStore';
+import { StoreEvents } from 'constants/ApiConstants';
 
 export default class EntryInput extends Component {
     constructor() {
@@ -13,13 +15,33 @@ export default class EntryInput extends Component {
         this.setName = this.setName.bind(this);
         this.setDescription = this.setDescription.bind(this);
         this.handleClick = this.handleClick.bind(this);
+        this.onEntryAdded = this.onEntryAdded.bind(this);
+    }
+
+    componentDidMount() {
+        // listen for changes in the store
+        EntryStore.addChangeListener(StoreEvents.ENTRY_ADDED, this.onEntryAdded);
+    }
+
+    componentWillUnmount() {
+        // stop listening for changes in the store
+        EntryStore.removeChangeListener(StoreEvents.ENTRY_ADDED, this.onEntryAdded);
+    }
+
+    onEntryAdded() {
+        const newStateObj = {
+            name: '',
+            description: ''
+        };
+
+        this.setState(newStateObj);
     }
 
     setName(event) {
         const inputName = event.target.value;
         const newStateObj = {
             name: inputName,
-            description: this.state.description
+            description: this.state.description,
         };
 
         this.setState(newStateObj);
@@ -29,7 +51,7 @@ export default class EntryInput extends Component {
         const inputDesc = event.target.value;
         const newStateObj = {
             name: this.state.name,
-            description: inputDesc
+            description: inputDesc,
         };
 
         this.setState(newStateObj);
@@ -55,7 +77,7 @@ export default class EntryInput extends Component {
                         <FormControl type="text" id="descInput" value={this.state.description} onChange={this.setDescription} placeholder="Task description"/>
                     </FormGroup>
                     {'  '}
-                    <Button onClick={this.handleClick} bsStyle="success">Start</Button>
+                    <Button onClick={this.handleClick} bsStyle="success" disabled={!this.state.name}>Start</Button>
                 </Form>
             </Grid>
         )

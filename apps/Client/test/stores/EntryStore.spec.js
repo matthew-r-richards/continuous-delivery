@@ -5,7 +5,7 @@ import { stub, spy } from 'sinon';
 
 import reload from 'helpers/reload';
 
-import { ActionTypes } from 'constants/ApiConstants';
+import { ActionTypes, StoreEvents } from 'constants/ApiConstants';
 
 describe('EntryStore', () => {
     let EntryStore;
@@ -57,8 +57,9 @@ describe('EntryStore', () => {
         expect(entries[0].name).to.equal('new name');
         expect(entries[0].description).to.equal('new description');
 
-        // check the change event was emitted
-        expect(EntryStore.emitChange.calledOnce).to.be.true;
+        // check the change events were emitted
+       expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
+       expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRY_ADDED)).to.be.true;
     });
 
     it('should delete an entry from the store', () => {
@@ -99,7 +100,7 @@ describe('EntryStore', () => {
         expect(entriesAfter[0].id).to.not.equal(2);
 
         // check the change event was emitted
-        expect(EntryStore.emitChange.calledOnce).to.be.true;
+       expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
     })
 
     it('should update an entry in the store', () => {
@@ -154,7 +155,7 @@ describe('EntryStore', () => {
         expect(entries[1].taskEnd).to.equal(newEndTime);
 
         // check the change event was emitted
-        expect(EntryStore.emitChange.calledOnce).to.be.true;
+        expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
     })
 
     it('should load entries into the store', () => {
@@ -175,6 +176,6 @@ describe('EntryStore', () => {
         expect(actualEntries).to.eql(expectedEntries);
 
         // check the change event was emitted
-        expect(EntryStore.emitChange.calledOnce).to.be.true;
+       expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
     });
 });

@@ -1,8 +1,6 @@
 import EntryDispatcher from 'dispatcher/EntryDispatcher';
-import { ActionTypes } from 'constants/ApiConstants.js';
+import { ActionTypes, StoreEvents } from 'constants/ApiConstants.js';
 import { EventEmitter } from 'events';
-
-const CHANGE_EVENT = 'change';
 
 class EntryStore extends EventEmitter {
     constructor() {
@@ -10,16 +8,16 @@ class EntryStore extends EventEmitter {
         this.entries = [];
     }
 
-    emitChange() {
-        this.emit(CHANGE_EVENT);
+    emitChange(changeEvent) {
+        this.emit(changeEvent);
     }
 
-    addChangeListener(callback) {
-        this.on(CHANGE_EVENT, callback);
+    addChangeListener(changeEvent, callback) {
+        this.on(changeEvent, callback);
     }
 
-    removeChangeListener(callback) {
-        this.removeListener(CHANGE_EVENT, callback);
+    removeChangeListener(changeEvent, callback) {
+        this.removeListener(changeEvent, callback);
     }
 
     getAllEntries() {
@@ -28,12 +26,13 @@ class EntryStore extends EventEmitter {
 
     refreshEntries(data) {
         this.entries = data;
-        this.emitChange();
+        this.emitChange(StoreEvents.ENTRIES_CHANGED);
     }
 
     addEntry(data) {
         this.entries.push(data);
-        this.emitChange();
+        this.emitChange(StoreEvents.ENTRIES_CHANGED);
+        this.emitChange(StoreEvents.ENTRY_ADDED);
     }
 
     removeEntry(data) {
@@ -42,7 +41,7 @@ class EntryStore extends EventEmitter {
 
         if (indexToRemove !== -1) {
             this.entries.splice(indexToRemove, 1);
-            this.emitChange();
+            this.emitChange(StoreEvents.ENTRIES_CHANGED);
         }
     }
 
@@ -53,7 +52,7 @@ class EntryStore extends EventEmitter {
         if (indexToUpdate !== -1) {
             // insert the new element in place of the old one
             this.entries.splice(indexToUpdate, 1, data);
-            this.emitChange();
+            this.emitChange(StoreEvents.ENTRIES_CHANGED);
         }
     }
 }
