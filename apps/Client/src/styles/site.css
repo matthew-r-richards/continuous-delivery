@@ -1,3 +1,7 @@
 .grid-row {
     margin-bottom: 15px;
 }
+
+.complete {
+    color: lightgray;
+}
