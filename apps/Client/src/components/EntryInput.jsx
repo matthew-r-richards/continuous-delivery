@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, FormGroup, ControlLabel, FormControl, Form, Grid } from 'react-bootstrap';
+import { Button, FormGroup, ControlLabel, FormControl, Form, Grid, Glyphicon } from 'react-bootstrap';
 import EntryStore from 'stores/EntryStore';
 import { StoreEvents } from 'constants/ApiConstants';
 
@@ -77,7 +77,7 @@ export default class EntryInput extends Component {
                         <FormControl type="text" id="descInput" value={this.state.description} onChange={this.setDescription} placeholder="Task description"/>
                     </FormGroup>
                     {'  '}
-                    <Button onClick={this.handleClick} bsStyle="success" disabled={!this.state.name}>Start</Button>
+                    <Button id="startBtn" bsStyle="success" onClick={this.handleClick} disabled={!this.state.name}><Glyphicon glyph="play" /></Button>
                 </Form>
             </Grid>
         )
