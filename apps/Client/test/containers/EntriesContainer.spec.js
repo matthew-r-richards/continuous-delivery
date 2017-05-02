@@ -7,6 +7,7 @@ import reload from 'helpers/reload';
 
 import EntryList from 'components/EntryList';
 import Error from 'components/Error';
+import Status from 'components/Status';
 import { StoreEvents } from 'constants/ApiConstants';
 
 describe('<EntriesContainer/>', () => {
@@ -26,7 +27,8 @@ describe('<EntriesContainer/>', () => {
         getAllEntries: stub(EntryStore, 'getAllEntries'),
         addChangeListener: stub(EntryStore, 'addChangeListener'),
         removeChangeListener: stub(EntryStore, 'removeChangeListener'),
-        getHasApiError: stub(EntryStore, 'getHasApiError')
+        getHasApiError: stub(EntryStore, 'getHasApiError'),
+        getTotalDuration: stub(EntryStore, 'getTotalDuration')
       },
       EntryActionCreators: {
         loadEntries: stub(EntryActionCreators, 'loadEntries'),
@@ -38,19 +40,31 @@ describe('<EntriesContainer/>', () => {
 
     // set the EntryStore stub to return a simple set of entries
     stubs.EntryStore.getAllEntries.returns(['entry 1', 'entry 2']);
+    stubs.EntryStore.getHasApiError.returns(false);
+    stubs.EntryStore.getTotalDuration.returns(90);
 
     EntriesContainer = reload('../../src/containers/EntriesContainer');
     wrapper = shallow(<EntriesContainer/>);
   });
 
-  it('should render EntryInput and EntryList components', () => {
+  it('should render EntryInput, Status and EntryList components', () => {
     expect(wrapper.find(EntryInput)).to.have.length(1);
+    expect(wrapper.find(Status)).to.have.length(1);
     expect(wrapper.find(EntryList)).to.have.length(1);
   });
 
   it('should dispatch an action to load all entries on mounting', () => {
     wrapper = mount(<EntriesContainer/>);
     expect(stubs.EntryActionCreators.loadEntries.called).to.be.true;
+  });
+
+  it('should pass duration total and target to the Status component', () => {
+    // call onChange so that the container has an up-to-date value for total duration
+    wrapper.instance().onChange();
+
+    expect(wrapper.containsAllMatchingElements([
+      <Status totalDuration={90} hoursTarget={8.5}/>
+    ])).to.be.true
   });
 
  it('creates an action to add an entry', () => {
@@ -97,17 +111,40 @@ describe('<EntriesContainer/>', () => {
     expect(stubs.EntryActionCreators.stopEntry.calledWith(1)).to.be.true;
   })
 
-  it('should update entries when notified of a change', () => {
+  it('should update entries when notified of a change and there is no error', () => {
     // set the EntryStore stub to return a changed (simple) set of entries
     stubs.EntryStore.getAllEntries.returns(['entry 1', 'entry 2', 'entry 3']);
+    stubs.EntryStore.getTotalDuration.returns(120);
 
     wrapper.instance().onChange();
 
     expect(stubs.EntryStore.getAllEntries.called).to.be.true;
+    expect(stubs.EntryStore.getHasApiError.called).to.be.true;
+    expect(stubs.EntryStore.getTotalDuration.called).to.be.true;
+
+    expect(wrapper.state().totalDuration).to.equal(120);
+
+    expect(wrapper.state().showError).to.equal(false);
+
     expect(wrapper.state().entries.length).to.equal(3);
     expect(wrapper.state().entries[0]).to.equal('entry 1');
     expect(wrapper.state().entries[1]).to.equal('entry 2');
     expect(wrapper.state().entries[2]).to.equal('entry 3');
+  });
+
+  it('should not update entries when notified of a change if there is an error', () => {
+    // set the EntryStore stub to return a changed (simple) set of entries
+    stubs.EntryStore.getAllEntries.returns(['entry 1', 'entry 2', 'entry 3']);
+    stubs.EntryStore.getTotalDuration.returns(120);
+    stubs.EntryStore.getHasApiError.returns(true);
+
+    wrapper.instance().onChange();
+
+    expect(stubs.EntryStore.getHasApiError.called).to.be.true;
+    expect(stubs.EntryStore.getAllEntries.called).to.be.false;
+    expect(stubs.EntryStore.getTotalDuration.called).to.be.false;
+
+    expect(wrapper.state().showError).to.equal(true);
   });
 
   it('should add a change listener on mounting', () => {

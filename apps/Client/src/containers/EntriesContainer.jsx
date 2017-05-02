@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Grid, Row, Col } from 'react-bootstrap';
+import { Grid, Row, Col, ProgressBar } from 'react-bootstrap';
 
 import EntryInput from 'components/EntryInput';
 import EntryList from 'components/EntryList';
 import Error from 'components/Error';
+import Status from 'components/Status';
 
 import EntryActionCreators from 'actions/EntryActionCreators';
 import EntryStore from 'stores/EntryStore';
@@ -16,6 +17,7 @@ export default class EntriesContainer extends Component {
         // the list of entries will be empty until the store has been populated
         this.state = {
             entries: [],
+            totalDuration: 0,
             showError: false
         };
 
@@ -42,11 +44,13 @@ export default class EntriesContainer extends Component {
         if (EntryStore.getHasApiError()) {
             this.setState({
                 entries: this.state.entries,
+                totalDuration: this.state.totalDuration,
                 showError: true
             })
         } else {
             this.setState({
                 entries: EntryStore.getAllEntries(),
+                totalDuration: EntryStore.getTotalDuration(),
                 showError: false
             })
         }
@@ -75,6 +79,9 @@ export default class EntriesContainer extends Component {
                     <Error/>
                 </Row>
                 }
+                <Row className="grid-row">
+                    <Status totalDuration={this.state.totalDuration} hoursTarget={8.5}/>
+                </Row>
                 <Row className="grid-row">
                     <EntryList entries={this.state.entries} onStop={this.stopEntry} onDelete={this.deleteEntry}/>
                 </Row>
