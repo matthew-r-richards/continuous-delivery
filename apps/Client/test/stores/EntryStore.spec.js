@@ -56,6 +56,7 @@ describe('EntryStore', () => {
         expect(entries[0].id).to.equal(1);
         expect(entries[0].name).to.equal('new name');
         expect(entries[0].description).to.equal('new description');
+        expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change events were emitted
        expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
@@ -98,6 +99,7 @@ describe('EntryStore', () => {
         const entriesAfter = EntryStore.getAllEntries();
         expect(entriesAfter).to.have.length(1);
         expect(entriesAfter[0].id).to.not.equal(2);
+        expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change event was emitted
        expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
@@ -153,6 +155,7 @@ describe('EntryStore', () => {
         expect(entries[1].description).to.equal('new description');
         expect(entries[1].taskStart).to.equal(newStartTime);
         expect(entries[1].taskEnd).to.equal(newEndTime);
+        expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change event was emitted
         expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
@@ -174,8 +177,28 @@ describe('EntryStore', () => {
         // check the Store contents
         const actualEntries = EntryStore.getAllEntries();
         expect(actualEntries).to.eql(expectedEntries);
+        expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change event was emitted
        expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
     });
+
+    it('should set the API call error status', () => {
+        // check the initial state
+        expect(EntryStore.getHasApiError()).to.be.false;
+        
+        // trigger the dispatcher callback
+        const action = { 
+            type: ActionTypes.CALL_ERROR,
+            data: 'error'
+        }
+
+        dispatcherCallback(action);
+
+        // Check the store contents
+        expect(EntryStore.getHasApiError()).to.be.true;
+
+        // check the change event was emitted
+        expect(EntryStore.emitChange.calledWith(StoreEvents.ENTRIES_CHANGED)).to.be.true;
+    })
 });
