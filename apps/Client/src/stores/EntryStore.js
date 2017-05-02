@@ -1,11 +1,13 @@
 import EntryDispatcher from 'dispatcher/EntryDispatcher';
 import { ActionTypes, StoreEvents } from 'constants/ApiConstants.js';
 import { EventEmitter } from 'events';
+import moment from 'moment';
 
 class EntryStore extends EventEmitter {
     constructor() {
         super();
         this.entries = [];
+        this.totalDuration = 0;
         this.apiError = false;
     }
 
@@ -29,12 +31,33 @@ class EntryStore extends EventEmitter {
         return this.entries;
     }
 
+    getTotalDuration() {
+        return this.totalDuration;
+    }
+
     refreshEntries(data) {
+        // calculate the durations
+        this.totalDuration = 0;
+        let duration;
+        data.forEach(entry => {
+            if (entry.taskEnd) {
+                duration = moment(entry.taskEnd).diff(moment(entry.taskStart), 'minutes');
+            } else {
+                duration = 0;
+            }
+
+            entry.duration = duration;
+            this.totalDuration +=  duration;
+        });
+
         this.entries = data;
         this.emitChange(StoreEvents.ENTRIES_CHANGED);
     }
 
     addEntry(data) {
+        // set the initial duration
+        data.duration = 0;
+
         this.entries.push(data);
         this.emitChange(StoreEvents.ENTRIES_CHANGED);
         this.emitChange(StoreEvents.ENTRY_ADDED);
@@ -45,16 +68,34 @@ class EntryStore extends EventEmitter {
         const indexToRemove = this.entries.findIndex(entry => entry.id === id);
 
         if (indexToRemove !== -1) {
+            // update the total duration
+            const itemDuration = this.entries[indexToRemove].duration;
+            this.totalDuration -= itemDuration;
+
             this.entries.splice(indexToRemove, 1);
             this.emitChange(StoreEvents.ENTRIES_CHANGED);
         }
     }
 
     updateEntry(data) {
+        let newDuration;
+        if (data.taskEnd) {
+            newDuration = moment(data.taskEnd).diff(moment(data.taskStart), 'minutes');
+        } else {
+            newDuration = 0;
+        }
+
+        data.duration = newDuration;
+
         const id = data.id;
         const indexToUpdate = this.entries.findIndex(entry => entry.id === id);
 
         if (indexToUpdate !== -1) {
+            // update the total duration
+            const oldDuration = this.entries[indexToUpdate].duration;
+            this.totalDuration -= oldDuration;
+            this.totalDuration += newDuration;
+
             // insert the new element in place of the old one
             this.entries.splice(indexToUpdate, 1, data);
             this.emitChange(StoreEvents.ENTRIES_CHANGED);

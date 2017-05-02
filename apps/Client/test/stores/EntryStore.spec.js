@@ -39,12 +39,15 @@ describe('EntryStore', () => {
 
     it('should add an entry to the store', () => {
         // trigger the dispatcher callback
+        const startTime = new Date();
         const action = {
             type: ActionTypes.RECEIVE_ADD_ENTRY,
             data: {
                 id: 1,
                 name: 'new name',
-                description: 'new description'
+                description: 'new description',
+                taskStart: startTime,
+                taskEnd: 0
             }
         };
 
@@ -56,6 +59,7 @@ describe('EntryStore', () => {
         expect(entries[0].id).to.equal(1);
         expect(entries[0].name).to.equal('new name');
         expect(entries[0].description).to.equal('new description');
+        expect(entries[0].duration).to.equal(0);
         expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change events were emitted
@@ -67,9 +71,12 @@ describe('EntryStore', () => {
         // NOTE: This test has a dependency on the store being able to retrieve
         // entries correctly, i.e. correctly process the RECEIVE_ENTRIES action
         // define two initial test entries
+        const startTime = new Date();
+        startTime.setMinutes(startTime.getMinutes() -30);
+        const endTime = new Date();
         const testEntries = [
-            { id: 1, name: 'name 1', description: 'description 1' },
-            { id: 2, name: 'name 2', description: 'description 2' }
+            { id: 1, name: 'name 1', description: 'description 1', taskStart: startTime, taskEnd: endTime },
+            { id: 2, name: 'name 2', description: 'description 2', taskStart: startTime, taskEnd: endTime }
         ]
         let action = {
             type: ActionTypes.RECEIVE_ENTRIES,
@@ -86,6 +93,7 @@ describe('EntryStore', () => {
         const entriesBefore = EntryStore.getAllEntries();
         expect(entriesBefore).to.have.length(2);
         expect(entriesBefore[1].id).to.equal(2);
+        expect(EntryStore.getTotalDuration()).to.equal(60);
 
         // trigger the dispatcher callback
         action = {
@@ -99,6 +107,7 @@ describe('EntryStore', () => {
         const entriesAfter = EntryStore.getAllEntries();
         expect(entriesAfter).to.have.length(1);
         expect(entriesAfter[0].id).to.not.equal(2);
+        expect(EntryStore.getTotalDuration()).to.equal(30);
         expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change event was emitted
@@ -110,7 +119,8 @@ describe('EntryStore', () => {
         // entries correctly, i.e. correctly process the RECEIVE_ENTRIES action
         // define an initial test entry
         const startTime = new Date();
-        const endTime = new Date();
+        startTime.setHours(startTime.getHours() - 2);
+        const endTime = new Date(); // Duration = end - start = 2 hrs
         const initialEntries = [
             { id: 1, name: 'name 1', description: 'description 1', taskStart: startTime, taskEnd: endTime },
             { id: 2, name: 'name 2', description: 'description 2', taskStart: startTime, taskEnd: null },
@@ -123,14 +133,16 @@ describe('EntryStore', () => {
 
         dispatcherCallback(action);
 
+        // check the initial total duration
+        expect(EntryStore.getTotalDuration()).to.equal(240);
+
         // reset the call counter on the emitChange spy so that we can check
         // if it is called as part of the update process
         EntryStore.emitChange.reset();
 
         let newStartTime = startTime;
-        newStartTime.setTime(newStartTime.getTime - 1000 * 60);
-        let newEndTime = endTime;
-        newEndTime.setTime(newEndTime.getTime )
+        newStartTime.setMinutes(newStartTime.getMinutes() - 1);
+        let newEndTime = endTime; // Duration = end - start = 2hrs 1 min
 
         const updatedEntry = {
             id: 2,
@@ -155,6 +167,7 @@ describe('EntryStore', () => {
         expect(entries[1].description).to.equal('new description');
         expect(entries[1].taskStart).to.equal(newStartTime);
         expect(entries[1].taskEnd).to.equal(newEndTime);
+        expect(EntryStore.getTotalDuration()).to.equal(361);        
         expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change event was emitted
@@ -163,9 +176,12 @@ describe('EntryStore', () => {
 
     it('should load entries into the store', () => {
         // trigger the dispatcher callback
+        const startTime = new Date();
+        startTime.setMinutes(startTime.getMinutes() - 5);
+        const endTime = new Date(); // Duration = end - start = 5 mins
         const expectedEntries = [
-            { id: 1, name: 'name 1', description: 'description 1' },
-            { id: 2, name: 'name 2', description: 'description 2' }
+            { id: 1, name: 'name 1', description: 'description 1', taskStart: startTime, taskEnd: endTime },
+            { id: 2, name: 'name 2', description: 'description 2', taskStart: endTime, taskEnd: null }
         ]
         const action = {
             type: ActionTypes.RECEIVE_ENTRIES,
@@ -177,6 +193,7 @@ describe('EntryStore', () => {
         // check the Store contents
         const actualEntries = EntryStore.getAllEntries();
         expect(actualEntries).to.eql(expectedEntries);
+        expect(EntryStore.getTotalDuration()).to.equal(5);
         expect(EntryStore.getHasApiError()).to.be.false;
 
         // check the change event was emitted
