@@ -5,35 +5,43 @@
 Vagrant.require_version ">= 1.6.0"
 VAGRANTFILE_API_VERSION = "2"
 
+# Require JSON module
+require 'json'
+
+# Read JSON file with box details
+nodes = JSON.parse(File.read(File.join(File.dirname(__FILE__), 'nodes.json')))
+
 # Create boxes
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-    config.vm.box = "ubuntu/xenial64"
+    # Iterate through entries in JSON file
+    nodes.each do |node|
+        config.vm.define node['name'] do |nodeConfig|
+            nodeConfig.vm.box = node['box']
+            nodeConfig.vm.hostname = node['name']
+            
+            nodeConfig.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
 
-    # Disable the SSH port enabled by default
-    config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
-    config.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+            nodeConfig.vm.network :private_network, ip: node['ip']
 
-    config.vm.define "jenkins.vm" do |jenkins|
-        jenkins.vm.hostname = "jenkins.vm"
+            if node['name'] == 'jenkins.vm'
+                # Expose the VM externally
+                nodeConfig.vm.network :forwarded_port, guest: 8080, host: 1234
 
-        # Expose the VM externally
-        jenkins.vm.network "forwarded_port", guest: 22, host: 5022
-        jenkins.vm.network "forwarded_port", guest: 8080, host: 1234
+                # Shared folder for Jenkins VM config
+                nodeConfig.vm.synced_folder ".", "/vagrant", disabled: true
+                nodeConfig.vm.synced_folder "../jenkins/config/", "/jenkins-config"
 
-        # Shared folder for Jenkins VM config
-        jenkins.vm.synced_folder ".", "/vagrant", disabled: true
-        jenkins.vm.synced_folder "../jenkins/config/", "/jenkins-config"
+                # Provision docker
+                nodeConfig.vm.provision "docker", images: ["node", "microsoft/aspnetcore", "microsoft/aspnetcore-build"]
+            end
 
-        # Provision docker
-        jenkins.vm.provision "docker", images: ["node", "microsoft/aspnetcore", "microsoft/aspnetcore-build"]
-        
-        # VirtualBox configuration
-        jenkins.vm.provider "virtualbox" do |vb|
-            vb.name = "jenkins.vm"
-            vb.memory = 1024
-        end
+            nodeConfig.vm.provider "virtualbox" do |vb|
+                vb.name = node['name']
+                vb.memory = node['ram']
+            end
 
-        # Provisioning via bootstrap script
-        jenkins.vm.provision "shell", path: "bootstrap-jenkins.sh"
-    end
-end
+                    # Provisioning via bootstrap script
+            nodeConfig.vm.provision :shell, :path => node['bootstrap']
+        end # config.vm
+    end # nodes.each
+end # Vagrant.configure

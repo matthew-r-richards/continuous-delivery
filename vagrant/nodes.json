@@ -1,0 +1,9 @@
+[
+    {
+        "name": "jenkins.vm",
+        "box": "ubuntu/xenial64",
+        "ip": "192.168.56.101",
+        "bootstrap": "bootstrap-jenkins.sh",
+        "ram": 512
+    }
+]
