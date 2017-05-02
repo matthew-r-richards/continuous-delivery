@@ -14,6 +14,7 @@ export default {
             .end((err, response) => {
                 if (err) {
                     logger.error(err);
+                    serverActionCreators.callError(err);
                     return;
                 }
 
@@ -30,13 +31,9 @@ export default {
             .send({ taskName: name, taskDescription: description })
             .end((err, response) => {
                 if (err) {
-                    if (response && response.status === 400) {
-                        logger.error(response.body);
-                        return;
-                    } else {
-                        logger.error(err);
-                        return;
-                    }
+                    logger.error(err);
+                    serverActionCreators.callError(err);
+                    return;
                 }
                 
                 serverActionCreators.receiveAddedEntry(response.body);
@@ -51,13 +48,9 @@ export default {
             .set('Accept', 'application/json')
             .end((err, response) => {
                 if (err) {
-                    if (response && response.status === 404) {
-                        logger.error(response.body);
-                        return;
-                    } else {
-                        logger.error(err);
-                        return;
-                    }
+                    logger.error(err);
+                    serverActionCreators.callError(err);
+                    return;
                 }
 
                 serverActionCreators.entryDeleted(id);
@@ -72,13 +65,9 @@ export default {
             .set('Accept', 'application/json')
             .end((err, response) => {
                 if (err) {
-                    if (response && response.status === 404) {
-                        logger.error(response.body);
-                        return;
-                    } else {
-                        logger.error(err);
-                        return;
-                    }
+                    logger.error(err);
+                    serverActionCreators.callError(err);
+                    return;
                 }
 
                 serverActionCreators.entryUpdated(response.body);

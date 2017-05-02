@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { stub } from 'sinon';
+import { stub, match } from 'sinon';
 import nock from 'nock';
 
 import reload from 'helpers/reload';
@@ -16,6 +16,7 @@ describe('ApiUtils', () => {
         stub(ServerActionCreators, 'receiveAddedEntry');
         stub(ServerActionCreators, 'entryDeleted');
         stub(ServerActionCreators, 'entryUpdated');
+        stub(ServerActionCreators, 'callError');
         ApiUtils = reload('../../src/utils/ApiUtils');
     });
 
@@ -41,7 +42,7 @@ describe('ApiUtils', () => {
             }, 20);
         });
 
-        it('should not create an action if there is an error', done => {
+        it('should create an error action if there is an error', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
                 .get('/entries')
@@ -53,6 +54,7 @@ describe('ApiUtils', () => {
             // in ApiUtils.getAllEntries is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.receiveEntries.notCalled).to.be.true;
+                expect(ServerActionCreators.callError.called).to.be.true;
                 done();
             }, 20);
         });
@@ -77,7 +79,7 @@ describe('ApiUtils', () => {
             }, 20);
         });
 
-        it('should not create an action if there is an error', done => {
+        it('should create an error action if there is an error', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
                 .post('/entries')
@@ -89,11 +91,12 @@ describe('ApiUtils', () => {
             // in ApiUtils.addEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.receiveAddedEntry.notCalled).to.be.true;
+                expect(ServerActionCreators.callError.called).to.be.true;
                 done();
             }, 20);
         });
 
-        it('should not create an action if the supplied data was not complete (400)', done => {
+        it('should create an error action if the supplied data was not complete (400)', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
                 .post('/entries', { taskName: null, taskDescription: 'description 4' })
@@ -105,6 +108,7 @@ describe('ApiUtils', () => {
             // in ApiUtils.addEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.receiveAddedEntry.notCalled).to.be.true;
+                expect(ServerActionCreators.callError.called).to.be.true;
                 done();
             }, 20);
         });
@@ -127,7 +131,7 @@ describe('ApiUtils', () => {
             }, 20);
         });
 
-        it('should not create an action if there is an error', done => {
+        it('should create an error action if there is an error', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
                 .delete('/entries/1')
@@ -139,11 +143,12 @@ describe('ApiUtils', () => {
             // in ApiUtils.deleteEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.entryDeleted.notCalled).to.be.true;
+                expect(ServerActionCreators.callError.called).to.be.true;
                 done();
             }, 20);
         });
 
-        it('should not create an action if the Entry was not found (404)', done => {
+        it('should create an error action if the Entry was not found (404)', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
                 .delete('/entries/-1')
@@ -155,6 +160,7 @@ describe('ApiUtils', () => {
             // in ApiUtils.deleteEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.entryDeleted.notCalled).to.be.true;
+                expect(ServerActionCreators.callError.called).to.be.true;
                 done();
             }, 20);
         });
@@ -179,7 +185,7 @@ describe('ApiUtils', () => {
             }, 20);
         });
 
-        it('should not create an action if there is an error', done => {
+        it('should create an error action if there is an error', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
                 .post('/entries/1/stop')
@@ -191,11 +197,12 @@ describe('ApiUtils', () => {
             // in ApiUtils.stopEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.entryUpdated.notCalled).to.be.true;
+                expect(ServerActionCreators.callError.called).to.be.true;
                 done();
             }, 20);
         });
 
-        it('should not create an action if the Entry was not found (404)', done => {
+        it('should create an error action if the Entry was not found (404)', done => {
             // set up nock to create an error
             nock('http://localhost:80/api')
                 .delete('/entries/-1/stop')
@@ -207,6 +214,7 @@ describe('ApiUtils', () => {
             // in ApiUtils.stopEntry is complete, so that I can assert its output
             setTimeout(() => {
                 expect(ServerActionCreators.entryUpdated.notCalled).to.be.true;
+                expect(ServerActionCreators.callError.called).to.be.true;
                 done();
             }, 20);
         });
