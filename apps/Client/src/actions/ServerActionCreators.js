@@ -28,5 +28,12 @@ export default {
             type: ActionTypes.ENTRY_UPDATED,
             data: data
         })
+    },
+
+    callError: data => {
+        dispatcher.dispatch({
+            type: ActionTypes.CALL_ERROR,
+            data: data
+        })
     }
 }

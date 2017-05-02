@@ -60,5 +60,16 @@ describe('ServerActionCreators', () => {
         };
 
         expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
-    })
+    });
+
+    it('dispatches an event if there is an API call error', () => {
+        const expectedAction = {
+            type: ActionTypes.CALL_ERROR,
+            data: 'error'
+        };
+
+        ServerActionCreators.callError('error');
+        
+        expect(EntryDispatcher.dispatch.calledWith(expectedAction)).to.be.true;
+    });
 });

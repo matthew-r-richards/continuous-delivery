@@ -14,7 +14,8 @@ export const ActionTypes = keyMirror({
     STOP_ENTRY: null,
     ENTRY_UPDATED: null,
     LOAD_ENTRIES: null,
-    RECEIVE_ENTRIES: null
+    RECEIVE_ENTRIES: null,
+    CALL_ERROR: null
 });
 
 export const StoreEvents = keyMirror({
