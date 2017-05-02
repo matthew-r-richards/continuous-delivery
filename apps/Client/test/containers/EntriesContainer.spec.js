@@ -6,6 +6,7 @@ import { stub } from 'sinon';
 import reload from 'helpers/reload';
 
 import EntryList from 'components/EntryList';
+import Error from 'components/Error';
 import { StoreEvents } from 'constants/ApiConstants';
 
 describe('<EntriesContainer/>', () => {
@@ -24,7 +25,8 @@ describe('<EntriesContainer/>', () => {
       EntryStore: {
         getAllEntries: stub(EntryStore, 'getAllEntries'),
         addChangeListener: stub(EntryStore, 'addChangeListener'),
-        removeChangeListener: stub(EntryStore, 'removeChangeListener')
+        removeChangeListener: stub(EntryStore, 'removeChangeListener'),
+        getHasApiError: stub(EntryStore, 'getHasApiError')
       },
       EntryActionCreators: {
         loadEntries: stub(EntryActionCreators, 'loadEntries'),
@@ -130,5 +132,25 @@ describe('<EntriesContainer/>', () => {
     expect(entries.length).to.equal(2);
     expect(entries[0]).to.equal('entry 1');
     expect(entries[1]).to.equal('entry 2');
+  });
+
+  it('should render Error component if the store reports there was an error', () => {
+    // set the EntryStore stub to return an error state
+    stubs.EntryStore.getHasApiError.returns(true);
+
+    wrapper.instance().onChange();
+
+    expect(stubs.EntryStore.getHasApiError.called).to.be.true;
+    expect(wrapper.state().showError).to.be.true;
+    expect(wrapper.find(Error)).to.have.length(1);
+
+    // now check it is not rendered if there is no error
+    stubs.EntryStore.getHasApiError.returns(false);
+
+    wrapper.instance().onChange();
+
+    expect(stubs.EntryStore.getHasApiError.called).to.be.true;
+    expect(wrapper.state().showError).to.be.false;
+    expect(wrapper.find(Error)).to.have.length(0);
   });
 });

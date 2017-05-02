@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 
 import EntryInput from 'components/EntryInput';
-import EntryList from 'components/EntryList'
+import EntryList from 'components/EntryList';
+import Error from 'components/Error';
 
 import EntryActionCreators from 'actions/EntryActionCreators';
 import EntryStore from 'stores/EntryStore';
@@ -14,7 +15,8 @@ export default class EntriesContainer extends Component {
         
         // the list of entries will be empty until the store has been populated
         this.state = {
-            entries: []
+            entries: [],
+            showError: false
         };
 
         this.addEntry = this.addEntry.bind(this);
@@ -37,9 +39,17 @@ export default class EntriesContainer extends Component {
 
     onChange() {
         // update the component state with the values from the store
-        this.setState({
-            entries: EntryStore.getAllEntries()
-        })
+        if (EntryStore.getHasApiError()) {
+            this.setState({
+                entries: this.state.entries,
+                showError: true
+            })
+        } else {
+            this.setState({
+                entries: EntryStore.getAllEntries(),
+                showError: false
+            })
+        }
     }
 
     addEntry(name, description) {
@@ -60,6 +70,11 @@ export default class EntriesContainer extends Component {
                 <Row className="grid-row">
                     <EntryInput onSubmit={this.addEntry}/>
                 </Row>
+                { this.state.showError && 
+                <Row className="grid-row">
+                    <Error/>
+                </Row>
+                }
                 <Row className="grid-row">
                     <EntryList entries={this.state.entries} onStop={this.stopEntry} onDelete={this.deleteEntry}/>
                 </Row>
