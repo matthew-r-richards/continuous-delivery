@@ -1,4 +1,7 @@
 node {
+    stage("Clear out workspace") {
+        cleanWs()
+    }
     stage("Checkout") {
         git url: 'https://github.com/matthew-r-richards/continuous-deployment.git'
     }

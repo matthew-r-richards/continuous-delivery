@@ -94,6 +94,7 @@ install_plugin "git"
 install_plugin "workflow-aggregator"
 install_plugin "htmlpublisher"
 install_plugin "blueocean"
+install_plugin "ws-cleanup"
 
 changed=1
 
