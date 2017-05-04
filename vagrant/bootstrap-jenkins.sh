@@ -52,10 +52,6 @@ sudo apt-get -y update
 echo "--- Installing utilities ---"
 sudo apt-get -y install git unzip jq sshpass
 
-# Install dotnet core
-echo "--- Installing dotnet core ---"
-sudo apt-get -y install dotnet-dev-1.0.1
-
 # Install jenkins
 echo "--- Installing jenkins ---"
 sudo apt-get -y install jenkins
