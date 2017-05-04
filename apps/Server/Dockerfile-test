@@ -5,4 +5,4 @@ WORKDIR /usr/src/server-app
 
 RUN dotnet restore
 
-CMD dotnet test WebApplication.tests/WebApplication.tests.csproj && rm -rf ./publish/* && dotnet publish WebApplication -c Release -o ./publish
+CMD dotnet test WebApplication.tests/WebApplication.tests.csproj && rm -rf $(pwd)/publish/* && dotnet publish WebApplication -c Release -o $(pwd)/publish
