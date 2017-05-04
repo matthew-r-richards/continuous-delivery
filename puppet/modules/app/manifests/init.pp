@@ -8,7 +8,7 @@ class app {
 
     file { '/home/vagrant/client-app':
         ensure => 'directory',
-        source => 'puppet:///modules/app/client',
+        source => 'puppet:///modules/app/Client',
         recurse => 'remote',
         path => '/home/vagrant/apps/client-app',
         owner => 'vagrant',
