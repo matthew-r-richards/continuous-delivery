@@ -11,7 +11,8 @@ node {
     stage("Deploy to QA") {
         sh "sshpass -p vagrant rsync -e 'ssh -o StrictHostKeyChecking=no' puppet/manifests/* vagrant@puppet.vm:/etc/puppetlabs/code/environments/qa/manifests";
         sh "sshpass -p vagrant rsync -re 'ssh -o StrictHostKeyChecking=no' puppet/modules/* vagrant@puppet.vm:/etc/puppetlabs/code/environments/qa/modules";
-        sh "sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@qa.vm sudo /opt/puppetlabs/bin/puppet agent -t";
+        // the puppet agent exits with a code of 2 if changes have been applied, we want to convert this to 0 so that Jenkins doesn't think the step failed'
+        sh "sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@qa.vm sudo /opt/puppetlabs/bin/puppet agent -t || test $? -eq 2";
     }
     publishHTML (target: [
         allowMissing: false,
