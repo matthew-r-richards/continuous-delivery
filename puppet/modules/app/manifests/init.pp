@@ -23,7 +23,7 @@ class app {
 
     file { '/home/vagrant/apps/server-app':
         ensure => 'directory',
-        source => 'puppet:///modules/app/Server/publish',
+        source => 'puppet:///modules/app/Server',
         recurse => 'remote',
         owner => 'vagrant',
     }
