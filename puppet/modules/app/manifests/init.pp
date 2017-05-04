@@ -2,6 +2,9 @@ class app {
 
     require docker
 
+    docker::image { 'node': }
+    docker::image { 'microsoft/aspnetcore': }
+
     exec {'rm -rf /home/vagrant/apps/*':
         path => '/usr/bin:/usr/sbin:/bin'
     }
