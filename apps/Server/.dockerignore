@@ -1,6 +1,6 @@
 .git
 .gitignore
-WebApplication
-WebApplication.tests
-Server.sln
+bin
+**/bin/
+**/obj/
 Server.userprefs

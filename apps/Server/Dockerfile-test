@@ -1,0 +1,8 @@
+FROM microsoft/aspnetcore-build
+
+COPY . /usr/src/server-app
+WORKDIR /usr/src/server-app
+
+RUN dotnet restore
+
+CMD dotnet test WebApplication.tests/WebApplication.tests.csproj && rm -rf ./publish && dotnet publish WebApplication -c Release -o ./publish

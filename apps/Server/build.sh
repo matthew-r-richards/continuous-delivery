@@ -1,6 +1,5 @@
 #!/bin/bash
 set -e
-dotnet restore
-dotnet test WebApplication.tests/WebApplication.tests.csproj
-rm -rf $(pwd)/publish
-dotnet publish WebApplication -c Release -o $(pwd)/publish
+
+docker build -f Dockerfile-test -t server-app .
+docker run --rm -v $(pwd)/publish:/usr/src/server-app/publish server-app
