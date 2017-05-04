@@ -27,4 +27,11 @@ class app {
         recurse => 'remote',
         owner => 'vagrant',
     }
+
+    file { '/home/vagrant/apps/docker-compose.yml':
+        ensure => 'present',
+        source => 'puppet:///modules/app/docker-compose.yml',
+        owner => 'vagrant',
+        require => File['/home/vagrant/apps/server-app']
+    }
 }
