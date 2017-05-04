@@ -20,4 +20,11 @@ class app {
         recurse => 'remote',
         owner => 'vagrant',
     }
+
+    file { '/home/vagrant/apps/server-app':
+        ensure => 'directory',
+        source => 'puppet:///modules/app/Server/publish',
+        recurse => 'remote',
+        owner => 'vagrant',
+    }
 }
