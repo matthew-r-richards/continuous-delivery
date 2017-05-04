@@ -14,14 +14,14 @@ class app {
         owner => 'vagrant',
     }
 
-    file { '/home/vagrant/apps/client-app':
+    file { '/home/vagrant/apps/Client':
         ensure => 'directory',
         source => 'puppet:///modules/app/Client',
         recurse => 'remote',
         owner => 'vagrant',
     }
 
-    file { '/home/vagrant/apps/server-app':
+    file { '/home/vagrant/apps/Server':
         ensure => 'directory',
         source => 'puppet:///modules/app/Server',
         recurse => 'remote',
@@ -32,7 +32,7 @@ class app {
         ensure => 'present',
         source => 'puppet:///modules/app/docker-compose.yml',
         owner => 'vagrant',
-        require => File['/home/vagrant/apps/server-app']
+        require => File['/home/vagrant/apps/Server']
     }
     
     class {'docker::compose':
