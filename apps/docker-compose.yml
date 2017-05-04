@@ -7,7 +7,6 @@ services:
       dockerfile: Dockerfile-deploy
     image: server-app
     ports:
-      - 80
   client-app:
     container_name: client-app
     build:
@@ -15,4 +14,4 @@ services:
       dockerfile: Dockerfile-deploy
     image: client-app
     ports:
-      - 80
+      - 80:80
