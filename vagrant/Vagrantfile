@@ -9,26 +9,25 @@ VAGRANTFILE_API_VERSION = "2"
 require 'json'
 
 # Read JSON file with box details
-nodes = JSON.parse(File.read(File.join(File.dirname(__FILE__), 'nodes.json')))
+nodes = JSON.parse(File.read('nodes.json'))['nodes']
 
 # Create boxes
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # Iterate through entries in JSON file
     nodes.each do |node|
-        config.vm.define node['name'] do |nodeConfig|
-            nodeConfig.vm.box = node['box']
-            nodeConfig.vm.hostname = node['name']
-            
-            nodeConfig.ssh.shell = "bash -c 'BASH_ENV=/etc/profile exec bash'"
+        node_name = node[0]
+        node_config = node[1]
+        config.vm.define node_name do |nodeConfig|
+            nodeConfig.vm.box = node_config['box']
+            nodeConfig.vm.hostname = node_name
 
-            nodeConfig.vm.network :private_network, ip: node['ip']
+            nodeConfig.vm.network :private_network, ip: node_config['ip']
 
-            if node['name'] == 'jenkins.vm'
+            if node_name == 'jenkins.vm'
                 # Expose the VM externally
                 nodeConfig.vm.network :forwarded_port, guest: 8080, host: 1234
 
                 # Shared folder for Jenkins VM config
-                nodeConfig.vm.synced_folder ".", "/vagrant", disabled: true
                 nodeConfig.vm.synced_folder "../jenkins/config/", "/jenkins-config"
 
                 # Provision docker
@@ -36,12 +35,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             end
 
             nodeConfig.vm.provider "virtualbox" do |vb|
-                vb.name = node['name']
-                vb.memory = node['ram']
+                vb.name = node_name
+                vb.memory = node_config['ram']
+                vb.gui = true
             end
 
-                    # Provisioning via bootstrap script
-            nodeConfig.vm.provision :shell, :path => node['bootstrap']
+            # Provisioning via bootstrap script
+            nodeConfig.vm.provision :shell, :path => node_config['bootstrap']
         end # config.vm
     end # nodes.each
 end # Vagrant.configure

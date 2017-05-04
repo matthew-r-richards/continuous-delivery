@@ -1,9 +1,41 @@
-[
+{
+    "nodes":
     {
-        "name": "jenkins.vm",
-        "box": "ubuntu/xenial64",
-        "ip": "192.168.56.101",
-        "bootstrap": "bootstrap-jenkins.sh",
-        "ram": 512
+        "jenkins.vm": {
+            "box": "box-cutter/ubuntu1404-desktop",
+            "ip": "192.168.56.101",
+            "bootstrap": "bootstrap-jenkins.sh",
+            "ram": 1024,
+            "links":[
+                {
+                    "ip": "192.168.56.102",
+                    "hostname": "puppet.vm"
+                }
+            ]
+        },
+        "puppet.vm": {
+            "box": "box-cutter/ubuntu1404-desktop",
+            "ip": "192.168.56.102",
+            "bootstrap": "bootstrap-puppet-master.sh",
+            "ram": 1024,
+            "links":[
+                {
+                    "ip": "192.168.56.103",
+                    "hostname": "qa.vm"
+                }
+            ]
+        },
+        "qa.vm": {
+            "box": "box-cutter/ubuntu1404-desktop",
+            "ip": "192.168.56.103",
+            "bootstrap": "bootstrap-qa.sh",
+            "ram": 1024,
+            "links":[
+                {
+                    "ip": "192.168.56.102",
+                    "hostname": "puppet.vm"
+                }
+            ]
+        }
     }
-]
+}

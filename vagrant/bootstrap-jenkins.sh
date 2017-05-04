@@ -33,18 +33,24 @@ install_plugin(){
   fi
 }
 
+echo "--- Restarting network interfaces ---"
+sudo service network-manager stop
+sudo ifdown eth1
+sudo ifup eth1
+sudo service network-manager start
+
 echo "--- Adding apt repositories ---"
 sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
 wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
-sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ xenial main" > /etc/apt/sources.list.d/dotnetdev.list'
+sudo sh -c 'echo "deb [arch=amd64] https://apt-mo.trafficmanager.net/repos/dotnet-release/ trusty main" > /etc/apt/sources.list.d/dotnetdev.list'
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 417A0893
 
 echo "--- Updating apt package lists ---"
 sudo apt-get -y update
 
-# Install git and unzip
+# Install git and unzip, jq to parse json files
 echo "--- Installing utilities ---"
-sudo apt-get -y install git unzip
+sudo apt-get -y install git unzip jq
 
 # Install dotnet core
 echo "--- Installing dotnet core ---"
@@ -53,6 +59,24 @@ sudo apt-get -y install dotnet-dev-1.0.1
 # Install jenkins
 echo "--- Installing jenkins ---"
 sudo apt-get -y install jenkins
+
+echo "--- Configuring /etc/hosts ---"
+sudo cp /vagrant/nodes.json nodes.json
+
+length=$(jq <"nodes.json" '.nodes["jenkins.vm"]["links"] | length')
+
+for (( i=0; i<$length; i++ ))
+do
+
+    ip=$(jq <"nodes.json" --arg index $i '.nodes["jenkins.vm"]["links"][$index|tonumber]["ip"]')
+
+    hostname=$(jq <"nodes.json" --arg index $i '.nodes["jenkins.vm"]["links"][$index|tonumber]["hostname"]')
+
+    host=$(echo "$ip $hostname" | sed 's/"//g')
+
+    sudo echo "$host" >> /etc/hosts
+done
+sudo sed -i 's/127\.0\.0\.1.*/&\tjenkins.vm/' /etc/hosts
 
 # Copy jenkins configuration file (which is in the shared directory)
 echo "--- Configuring jenkins ---"
@@ -73,6 +97,7 @@ echo "--- Installing jenkins plugins ---"
 install_plugin "git"
 install_plugin "workflow-aggregator"
 install_plugin "htmlpublisher"
+install_plugin "blueocean"
 
 changed=1
 
