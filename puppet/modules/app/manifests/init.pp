@@ -9,11 +9,15 @@ class app {
         path => '/usr/bin:/usr/sbin:/bin'
     }
 
-    file { '/home/vagrant/client-app':
+    file { '/home/vagrant/apps':
+        ensure => 'directory',
+        owner => 'vagrant',
+    }
+
+    file { '/home/vagrant/apps/client-app':
         ensure => 'directory',
         source => 'puppet:///modules/app/Client',
         recurse => 'remote',
-        path => '/home/vagrant/apps/client-app',
         owner => 'vagrant',
     }
 }
