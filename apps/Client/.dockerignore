@@ -2,9 +2,8 @@
 .gitignore
 node_modules
 dist
-test
 coverage
 build.sh
 webpack.dev.config.js
-.istanbul.yml
-.babelrc
+Dockerfile-deploy
+Dockerfile-test
