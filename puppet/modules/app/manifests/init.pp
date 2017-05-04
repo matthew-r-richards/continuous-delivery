@@ -34,4 +34,12 @@ class app {
         owner => 'vagrant',
         require => File['/home/vagrant/apps/server-app']
     }
+    
+    class {'docker::compose':
+      ensure => present
+    }
+
+    docker_compose {'/home/vagrant/apps/docker-compose.yml':
+      ensure => present
+    }
 }
