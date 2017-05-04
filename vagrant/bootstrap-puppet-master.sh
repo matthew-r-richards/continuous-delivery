@@ -40,6 +40,7 @@ sudo apt-get -y install puppetserver
 
 echo "--- Installing puppet modules ---"
 /opt/puppetlabs/bin/puppet module install puppetlabs-ntp
+/opt/puppetlabs/bin/puppet module install garethr-docker
 
 echo "--- Updating the server memory allocation ---"
 sudo sed -i 's/-Xms.*\s-Xmx.*\s/-Xms512m -Xmx512m /' /etc/default/puppetserver
