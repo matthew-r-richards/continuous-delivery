@@ -1,6 +1,8 @@
 .git
 .gitignore
-bin
-**/bin/
-**/obj/
+**/bin
+**/obj
 Server.userprefs
+.dockerignore
+Dockerfile-deploy
+Dockerfile-test
