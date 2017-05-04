@@ -40,7 +40,7 @@ sudo sed -i 's/127\.0\.0\.1.*/&\tqa.vm/' /etc/hosts
 
 echo "--- Configuring agent ---"
 # Add agent section to puppet.conf
-sudo sed -i '$ a [agent]\nserver=puppet.vm\nruninterval=5m' /etc/puppetlabs/puppet/puppet.conf
+sudo sed -i '$ a [agent]\nserver=puppet.vm\nenvironment=qa\nruninterval=5m' /etc/puppetlabs/puppet/puppet.conf
 
 # Add main section with certname to puppet.conf
 sudo sed -i '$ a [main]\ncertname=qa.vm' /etc/puppetlabs/puppet/puppet.conf

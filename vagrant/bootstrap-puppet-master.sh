@@ -48,6 +48,10 @@ echo "--- Configuring puppet server ---"
 # Add optional alternate DNS names and certname to /etc/puppetlabs/puppet/puppet.conf
 sudo sed -i 's/.*\[master\].*/&\ndns_alt_names = puppet,puppet.vm\ncertname = puppet.vm/' /etc/puppetlabs/puppet/puppet.conf
 
+echo "--- Creating QA environment folders ---"
+sudo mkdir -p /etc/puppetlabs/code/environments/qa/manifests
+sudo mkdir -p /etc/puppetlabs/code/environments/qa/modules
+
 echo "--- Giving default user access to puppet configuration ---"
 sudo usermod -a -G puppet vagrant
 sudo chgrp puppet -R /etc/puppetlabs
