@@ -37,7 +37,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
             nodeConfig.vm.provider "virtualbox" do |vb|
                 vb.name = node_name
                 vb.memory = node_config['ram']
-                vb.gui = true
+                vb.gui = false
             end
 
             # Provisioning via bootstrap script
