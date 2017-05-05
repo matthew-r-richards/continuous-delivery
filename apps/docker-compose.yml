@@ -13,4 +13,4 @@ services:
       dockerfile: Dockerfile-deploy
     image: client-app
     ports:
-      - 80:80
+      - "80:80"

@@ -5,6 +5,17 @@ class app {
     docker::image { 'node': }
     docker::image { 'microsoft/aspnetcore': }
 
+    file { '/home/vagrant/apps/remove_old_docker_images.sh':
+        source => 'puppet:///modules/app/remove_old_docker_images.sh',
+        ensure => present,
+        mode => 'a+x'
+    }
+
+    exec {'remove_old_images':
+        require => File['/home/vagrant/apps/remove_old_docker_images.sh'],
+        command => "home/vagrant/apps/remove_old_docker_images.sh"
+    }
+
     exec {'rm -rf /home/vagrant/apps/*':
         path => '/usr/bin:/usr/sbin:/bin'
     }
