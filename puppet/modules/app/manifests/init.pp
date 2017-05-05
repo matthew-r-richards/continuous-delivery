@@ -13,7 +13,7 @@ class app {
 
     exec {'remove_old_images':
         require => File['/home/vagrant/apps/remove_old_docker_images.sh'],
-        command => "home/vagrant/apps/remove_old_docker_images.sh"
+        command => "/home/vagrant/apps/remove_old_docker_images.sh"
     }
 
     exec {'rm -rf /home/vagrant/apps/*':
