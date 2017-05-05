@@ -38,6 +38,14 @@ sudo sed -i 's/127\.0\.0\.1.*/&\tpuppet.vm/' /etc/hosts
 echo "--- Installing puppet server ---"
 sudo apt-get -y install puppetserver
 
+echo "--- Creating QA environment folders ---"
+sudo mkdir -p /etc/puppetlabs/code/environments/qa/manifests
+sudo mkdir -p /etc/puppetlabs/code/environments/qa/modules
+
+echo "--- Creating Production environment folders ---"
+sudo mkdir -p /etc/puppetlabs/code/environments/production/manifests
+sudo mkdir -p /etc/puppetlabs/code/environments/production/modules
+
 echo "--- Installing puppet modules ---"
 sudo /opt/puppetlabs/bin/puppet module install --environment production puppetlabs-ntp
 sudo /opt/puppetlabs/bin/puppet module install --environment production garethr-docker
@@ -50,14 +58,6 @@ sudo sed -i 's/-Xms.*\s-Xmx.*\s/-Xms512m -Xmx512m /' /etc/default/puppetserver
 echo "--- Configuring puppet server ---"
 # Add optional alternate DNS names and certname to /etc/puppetlabs/puppet/puppet.conf
 sudo sed -i 's/.*\[master\].*/&\ndns_alt_names = puppet,puppet.vm\ncertname = puppet.vm/' /etc/puppetlabs/puppet/puppet.conf
-
-echo "--- Creating QA environment folders ---"
-sudo mkdir -p /etc/puppetlabs/code/environments/qa/manifests
-sudo mkdir -p /etc/puppetlabs/code/environments/qa/modules
-
-echo "--- Creating Production environment folders ---"
-sudo mkdir -p /etc/puppetlabs/code/environments/production/manifests
-sudo mkdir -p /etc/puppetlabs/code/environments/production/modules
 
 echo "--- Giving default user access to puppet configuration ---"
 sudo usermod -a -G puppet vagrant
