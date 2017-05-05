@@ -55,6 +55,10 @@ echo "--- Creating QA environment folders ---"
 sudo mkdir -p /etc/puppetlabs/code/environments/qa/manifests
 sudo mkdir -p /etc/puppetlabs/code/environments/qa/modules
 
+echo "--- Creating Production environment folders ---"
+sudo mkdir -p /etc/puppetlabs/code/environments/production/manifests
+sudo mkdir -p /etc/puppetlabs/code/environments/production/modules
+
 echo "--- Giving default user access to puppet configuration ---"
 sudo usermod -a -G puppet vagrant
 sudo chgrp puppet -R /etc/puppetlabs
