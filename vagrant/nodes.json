@@ -14,6 +14,10 @@
                 {
                     "ip": "192.168.56.103",
                     "hostname": "qa.vm"
+                },
+                {
+                    "ip": "192.168.56.104",
+                    "hostname": "production.vm"
                 }
             ]
         },
@@ -26,6 +30,10 @@
                 {
                     "ip": "192.168.56.103",
                     "hostname": "qa.vm"
+                },
+                {
+                    "ip": "192.168.56.104",
+                    "hostname": "production.vm"
                 }
             ]
         },
@@ -33,6 +41,18 @@
             "box": "box-cutter/ubuntu1404-desktop",
             "ip": "192.168.56.103",
             "bootstrap": "bootstrap-qa.sh",
+            "ram": 1024,
+            "links":[
+                {
+                    "ip": "192.168.56.102",
+                    "hostname": "puppet.vm"
+                }
+            ]
+        },
+        "production.vm": {
+            "box": "box-cutter/ubuntu1404-desktop",
+            "ip": "192.168.56.104",
+            "bootstrap": "bootstrap-production.sh",
             "ram": 1024,
             "links":[
                 {

@@ -10,6 +10,14 @@ node {
     }
     stage("Build and Test Client App") {
         sh 'cd apps/Client; ./run_tests.sh;'
+        publishHTML (target: [
+            allowMissing: false,
+            alwaysLinkToLastBuild: false,
+            keepAll: true,
+            reportDir: 'apps/Client/coverage/lcov-report',
+            reportFiles: 'index.html',
+            reportName: "Client App Coverage Report"
+        ])
     }
     stage("Deploy to QA") {
         sh "sshpass -p vagrant rsync -e 'ssh -o StrictHostKeyChecking=no' puppet/manifests/* vagrant@puppet.vm:/etc/puppetlabs/code/environments/qa/manifests";
@@ -22,12 +30,18 @@ node {
         // the puppet agent exits with a code of 2 if changes have been applied, we want to convert this to 0 so that Jenkins doesn't think the step failed
         sh "sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@qa.vm sudo /opt/puppetlabs/bin/puppet agent -t || test \$? -eq 2";
     }
-    publishHTML (target: [
-        allowMissing: false,
-        alwaysLinkToLastBuild: false,
-        keepAll: true,
-        reportDir: 'apps/Client/coverage/lcov-report',
-        reportFiles: 'index.html',
-        reportName: "Client App Coverage Report"
-    ])
+    stage("Approve Deployment to Production") {
+        input message: 'Deploy to Production?', ok: 'Yes'
+    }
+    stage("Deploy to Production") {
+        sh "sshpass -p vagrant rsync -e 'ssh -o StrictHostKeyChecking=no' puppet/manifests/* vagrant@puppet.vm:/etc/puppetlabs/code/environments/production/manifests";
+        sh "sshpass -p vagrant rsync -re 'ssh -o StrictHostKeyChecking=no' puppet/modules/* vagrant@puppet.vm:/etc/puppetlabs/code/environments/production/modules";
+        sh "sshpass -p vagrant rsync --exclude 'coverage' -re 'ssh -o StrictHostKeyChecking=no' apps/Client vagrant@puppet.vm:/etc/puppetlabs/code/environments/production/modules/app/files";
+        sh "sshpass -p vagrant rsync -re 'ssh -o StrictHostKeyChecking=no' apps/Server/publish vagrant@puppet.vm:/etc/puppetlabs/code/environments/production/modules/app/files/Server/publish";
+        sh "sshpass -p vagrant rsync -e 'ssh -o StrictHostKeyChecking=no' apps/Server/Dockerfile-deploy vagrant@puppet.vm:/etc/puppetlabs/code/environments/production/modules/app/files/Server";
+        sh "sshpass -p vagrant rsync -e 'ssh -o StrictHostKeyChecking=no' apps/docker-compose.yml vagrant@puppet.vm:/etc/puppetlabs/code/environments/production/modules/app/files";
+        sh "sshpass -p vagrant rsync -e 'ssh -o StrictHostKeyChecking=no' apps/remove_old_docker_images.sh vagrant@puppet.vm:/etc/puppetlabs/code/environments/productionqa/modules/app/files";
+        // the puppet agent exits with a code of 2 if changes have been applied, we want to convert this to 0 so that Jenkins doesn't think the step failed
+        sh "sshpass -p vagrant ssh -o StrictHostKeyChecking=no vagrant@production.vm sudo /opt/puppetlabs/bin/puppet agent -t || test \$? -eq 2";
+    }
 }
