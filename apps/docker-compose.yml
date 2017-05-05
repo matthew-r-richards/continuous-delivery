@@ -6,11 +6,13 @@ services:
       context: ./Server
       dockerfile: Dockerfile-deploy
     image: server-app
+    restart: always
   client-app:
     container_name: client-app
     build:
       context: ./Client
       dockerfile: Dockerfile-deploy
     image: client-app
+    restart: always
     ports:
       - "80:80"
